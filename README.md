@@ -20,7 +20,7 @@ En la actualidad, organizar eventos, como lo son: las bodas, cumpleaños, confer
 
 ## Como correr el proyecto
 
-Clona el repositorio, naveha hacia la raiz del proyecto y ejecuta los siguientes comandos.
+Clona el repositorio, navega hacia la raiz del proyecto y ejecuta los siguientes comandos.
 
 ```sh
 npm install
