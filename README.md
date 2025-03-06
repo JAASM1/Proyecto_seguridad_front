@@ -17,6 +17,8 @@ En la actualidad, organizar eventos, como lo son: las bodas, cumpleaños, confer
 - Vee-Validate
 - TailwindCSS
 - Vue Router
+- PRIMEVUE
+- HeroIcons
 
 ## Como correr el proyecto
 
