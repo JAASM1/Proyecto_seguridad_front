@@ -3,6 +3,6 @@
 
 <template>
   <main>
-    <h1 class="bg-Dark">Hola</h1>
+    <h1 class="">Hola</h1>
   </main>
 </template>
