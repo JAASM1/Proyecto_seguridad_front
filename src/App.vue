@@ -47,7 +47,7 @@ const toggle = (event: Event) => {
       </div>
     </div>
   </header>
-  <div class="font-poppins bg-Dark max-md:px-6 min-h-screen">
+  <div class="bg-Dark max-md:px-6 min-h-screen">
     <RouterView />
   </div>
 </template>
