@@ -1,6 +1,6 @@
 export interface Event {
   name: string;
   description: string;
-  date: Date | null;
+  EventDateTime: Date | null;
   location: string;
 }

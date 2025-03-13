@@ -6,14 +6,28 @@
   </div>
 </template>
 <script lang="ts" setup>
-import Form from "@/components/Event/Form.vue";
-import type { Event } from "@/interfaces/Event/event";
+import { useEventStore } from "@/stores/Event/event";
 import { useRouter } from "vue-router";
 
+import Form from "@/components/Event/Form.vue";
+import type { Event } from "@/interfaces/Event/event";
+import { useToast } from "primevue/usetoast";
+
+const toast = useToast();
+const eventStore = useEventStore();
 const router = useRouter();
 
 const submitForm = (event: Event) => {
-  console.log("Form submitted", event);
-    router.push("/");
+  try {
+    eventStore.actions.createEvent(event);
+    toast.add({
+      severity: "success",
+      summary: "Form is submitted.",
+      life: 3000,
+    });
+    // router.push("/");
+  } catch (error) {
+    console.error("Error al enviar el evento: ", error);
+  }
 };
 </script>
