@@ -33,7 +33,7 @@ export const useEventStore = defineStore("event", () => {
       try {
         const data = {
           ...event,
-          date: event.EventDateTime?.toISOString(),
+          eventDateTime: event.eventDateTime?.toISOString(),
           idOrganizer: 1,
         };
         const response = await postEvent(data);

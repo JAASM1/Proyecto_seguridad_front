@@ -40,9 +40,9 @@
     <div class="flex w-full space-x-3">
       <div class="w-full">
         <FloatLabel variant="in" class="w-full">
-          <Field name="EventDateTime" v-slot="{ field }">
+          <Field name="eventDateTime" v-slot="{ field }">
             <DatePicker
-              id="EventDateTime"
+              id="eventDateTime"
               showTime
               hourFormat="24"
               fluid
@@ -50,7 +50,7 @@
               class="custom-datepicker"
             />
           </Field>
-          <label for="EventDateTime">Fecha y hora</label>
+          <label for="eventDateTime">Fecha y hora</label>
         </FloatLabel>
         <ErrorMessage name="date" class="text-danger text-sm" />
       </div>

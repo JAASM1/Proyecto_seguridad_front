@@ -31,6 +31,8 @@ export const getEventsByUser = async (idUser: number) => {
       baseUrl + `/GetEventsByUser/${idUser}`,
       "GET"
     );
+    console.log(response);
+    
     return response;
   } catch (error) {
     await handleError(error, "getEventsByUser");

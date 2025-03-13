@@ -1,8 +1,10 @@
 <template>
-  <div class="text-white space-y-5 font-poppins">
+  <div class="text-white space-y-5 font-poppins flex flex-col items-center">
     <Toast />
-    <h2 class="text-2xl font-bold">Crea un evento</h2>
-    <p class="text-sm">Ingresa la siguiente información</p>
+    <div class="space-y-3 w-full max-w-lg">
+      <h2 class="text-2xl font-bold">Crea un evento</h2>
+      <p class="text-sm">Ingresa la siguiente información</p>
+    </div>
     <Form @submit="submitForm" />
   </div>
 </template>
