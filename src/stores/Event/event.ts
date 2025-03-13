@@ -1,5 +1,5 @@
 import { LogService } from "@/services/LogService/logService";
-import { getEventsByUser, postEvent } from "@/services/Event/eventService";
+import { getEventsByUser, postEvent, getEventById } from "@/services/Event/eventService";
 import type { Event } from "@/interfaces/Event/event";
 
 import { defineStore } from "pinia";
@@ -23,6 +23,19 @@ export const useEventStore = defineStore("event", () => {
       } catch (error: any) {
         state.error = error.message;
         await LogService.log("error", "Error fetching events", error);
+      } finally {
+        state.loading = false;
+      }
+    },
+
+    async getEvent(id: number) {
+      state.loading = true;
+      try {
+        const response = await getEventById(id);
+        return response;
+      } catch (error: any) {
+        state.error = error.message;
+        await LogService.log("error", "Error fetching event", error);
       } finally {
         state.loading = false;
       }

@@ -39,6 +39,15 @@ export const getEventsByUser = async (idUser: number) => {
   }
 };
 
+export const getEventById = async (id: number) => {
+  try {
+    const response = await genericRequest(baseUrl + `/GetEventById/${id}`, "GET");
+    return response;
+  } catch (error) {
+    await handleError(error, "getEventById");
+  }
+};
+
 export const postEvent = async (data: any) => {
   try {
     const response = await genericRequest(baseUrl + "/Create", "POST", data);
