@@ -25,9 +25,13 @@ const handleError = async (error: any, context: string) => {
 };
 
 //Por arreglar
-export const getEventsByUser = async () => {
+export const getEventsByUser = async (idUser: number) => {
   try {
-    return await genericRequest(baseUrl + "/events", "GET");
+    const response = await genericRequest(
+      baseUrl + `/GetEventsByUser/${idUser}`,
+      "GET"
+    );
+    return response;
   } catch (error) {
     await handleError(error, "getEventsByUser");
   }
@@ -35,7 +39,8 @@ export const getEventsByUser = async () => {
 
 export const postEvent = async (data: any) => {
   try {
-    return await genericRequest(baseUrl + "/Create", "POST", data);
+    const response = await genericRequest(baseUrl + "/Create", "POST", data);
+    return response;
     // console.log(data);
   } catch (error) {
     await handleError(error, "postEvent");

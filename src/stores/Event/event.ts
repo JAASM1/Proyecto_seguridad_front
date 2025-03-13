@@ -5,6 +5,7 @@ import type { Event } from "@/interfaces/Event/event";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 
+const idUser = 1;
 export const useEventStore = defineStore("event", () => {
   const state = reactive({
     events: [] as Event[],
@@ -13,11 +14,12 @@ export const useEventStore = defineStore("event", () => {
   });
 
   const actions = {
-    async fetchEvents() {
+    async getAllEvents() {
       state.loading = true;
       try {
-        const response = await getEventsByUser();
+        const response = await getEventsByUser(idUser);
         state.events = response?.data || [];
+        return response;
       } catch (error: any) {
         state.error = error.message;
         await LogService.log("error", "Error fetching events", error);
@@ -25,6 +27,7 @@ export const useEventStore = defineStore("event", () => {
         state.loading = false;
       }
     },
+
     async createEvent(event: Event) {
       state.loading = true;
       try {
@@ -33,11 +36,18 @@ export const useEventStore = defineStore("event", () => {
           date: event.EventDateTime?.toISOString(),
           idOrganizer: 1,
         };
-        await postEvent(data);
-        state.events.push(event);
+        const response = await postEvent(data);
+
+        if (response && response.status === 200) {
+          state.events.push(event);
+          return response;
+        } else {
+          throw new Error("Error al crear el evento");
+        }
       } catch (error: any) {
         state.error = error.message;
         await LogService.log("error", "Error creating event", error);
+        throw error;
       } finally {
         state.loading = false;
       }
