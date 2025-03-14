@@ -6,8 +6,8 @@
         {{ event.description }}
       </p>
     </div>
-    <div class="flex items-center justify-between">
-      <div class="flex gap-5 text-xs">
+    <div class="flex items-center">
+      <div class="flex-1 flex w-full gap-5 text-xs">
         <p>
           Fecha: <span class="font-semibold">{{ dateUTC }}</span>
         </p>
@@ -16,9 +16,13 @@
         </p>
         <p>T. Invitados: <span class="font-semibold">0</span></p>
       </div>
-      <div>
+      <div class="flex gap-3">
         <!-- Button to see details of the event -->
         <EyeIcon class="size-6" />
+        <!-- Button to edit the event -->
+        <button @click="$emit('edit')" class="cursor-pointer">
+          <PencilIcon class="size-6" />
+        </button>
       </div>
     </div>
   </BaseEvent>
@@ -26,7 +30,7 @@
 
 <script setup lang="ts">
 import BaseEvent from "@/components/Event/BaseEvent.vue";
-import { EyeIcon } from "@heroicons/vue/24/outline";
+import { EyeIcon, PencilIcon } from "@heroicons/vue/24/outline";
 import type { Event } from "@/interfaces/Event/event";
 import { computed } from "vue";
 

@@ -5,3 +5,5 @@ export interface Event {
   eventDateTime: Date | null;
   location: string;
 }
+
+export type EventForm = Omit<Event, 'id'>;
