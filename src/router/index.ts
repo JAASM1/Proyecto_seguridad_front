@@ -23,7 +23,7 @@ const router = createRouter({
       component: FormEdit,
     },
     {
-      path: "/detalles-evento",
+      path: "/detalles-evento/:id",
       name: "detalles-evento",
       component: FormDetailsView,
     },

@@ -70,3 +70,15 @@ export const putEvent = async (idEvent: number, data:any) => {
     await handleError(error, "putEvent");
   }
 };
+
+export const deleteEvent = async (id: number) => {
+  try {
+    const response = await genericRequest(
+      baseUrl + `/Delete/${id}`,
+      "DELETE"
+    );
+    return response;
+  } catch (error) {
+    await handleError(error, "deleteEvent");
+  }
+};

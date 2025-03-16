@@ -7,7 +7,7 @@
         v-for="event in itemEvents"
         :key="event.id"
         :event="event"
-        @edit="editEvent(event.id)"
+        @details="detailsEvent(event.id)"
       />
     </div>
   </main>
@@ -35,7 +35,9 @@ const fetchEvents = async () => {
   }
 };
 
-const editEvent = (id: number) => roueter.push(`/editar-evento/${id}`);
+
+// const editEvent = (id: number) => roueter.push(`/editar-evento/${id}`);
+const detailsEvent = (id: number) => roueter.push(`/detalles-evento/${id}`);
 
 onMounted(() => {
   fetchEvents();

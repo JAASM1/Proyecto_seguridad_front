@@ -18,11 +18,13 @@
       </div>
       <div class="flex gap-3">
         <!-- Button to see details of the event -->
-        <EyeIcon class="size-6" />
-        <!-- Button to edit the event -->
+        <button @click="$emit('details')" class="cursor-pointer">
+          <EyeIcon class="size-6" />
+        </button>
+        <!-- Button to edit the event
         <button @click="$emit('edit')" class="cursor-pointer">
           <PencilIcon class="size-6" />
-        </button>
+        </button> -->
       </div>
     </div>
   </BaseEvent>
