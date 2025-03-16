@@ -5,5 +5,4 @@ export const formEventValidation = Yup.object().shape({
   description: Yup.string().required("La descripción es requerida"),
   eventDateTime: Yup.date().required("La fecha y hora es requerida").min(new Date(), "La fecha debe ser mayor a la fecha actual"),
   location: Yup.string().required("La ubicación es requerida"),
-  shareLink: Yup.string().required("El enlace es requerido").url("Debe ser una URL válida"),
 });

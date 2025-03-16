@@ -1,6 +1,6 @@
 import { LogService } from "@/services/LogService/logService";
-import { getEventsByUser, postEvent, getEventById } from "@/services/Event/eventService";
-import type { Event } from "@/interfaces/Event/event";
+import { getEventsByUser, postEvent, getEventById, putEvent, deleteEvent } from "@/services/Event/eventService";
+import type { Event, EventForm } from "@/interfaces/Event/event";
 
 import { defineStore } from "pinia";
 import { reactive } from "vue";
@@ -60,6 +60,55 @@ export const useEventStore = defineStore("event", () => {
       } catch (error: any) {
         state.error = error.message;
         await LogService.log("error", "Error creating event", error);
+        throw error;
+      } finally {
+        state.loading = false;
+      }
+    },
+
+    async updateEvent(id: number, event:Omit<Event, "id">) {
+      state.loading = true;
+      try {
+        const data = {
+          ...event,
+          eventDateTime: event.eventDateTime?.toISOString(),
+        };
+        const response = await putEvent(id, data);
+        if (response && response.status === 200) {
+          const index = state.events.findIndex(e => e.id === id);
+          if (index !== -1) {
+            state.events[index] = { ...state.events[index], ...event };
+          }
+          return response;
+        } else {
+          throw new Error("Error al actualizar el evento");
+        }
+      } catch (error: any) {
+        state.error = error.message;
+        await LogService.log("error", "Error updating event", error);
+        throw error;
+      } finally {
+        state.loading = false;
+      }
+      
+    },
+
+    async destroyEvent(id: number) {
+      state.loading = true;
+      try {
+        const response = await deleteEvent(id);
+        if (response && response.status === 200) {
+          const index = state.events.findIndex(e => e.id === id);
+          if (index !== -1) {
+            state.events.splice(index, 1);
+          }
+          return response;
+        } else {
+          throw new Error("Error al cancelar el evento");
+        }
+      } catch (error: any) {
+        state.error = error.message;
+        await LogService.log("error", "Error deleting event", error);
         throw error;
       } finally {
         state.loading = false;

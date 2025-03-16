@@ -4,6 +4,6 @@ export interface Event {
   description: string;
   eventDateTime: Date | null;
   location: string;
-  shareLink: string;
 }
 
+export type EventForm = Omit<Event, 'id'>;

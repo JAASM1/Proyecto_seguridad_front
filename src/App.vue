@@ -32,7 +32,7 @@ const toggle = (event: Event) => {
   <header
     class="font-poppins bg-Dark text-white px-6 py-4 flex items-center justify-between"
   >
-    <RouterLink to="/" class="text-3xl font-bold"> Evento </RouterLink>
+    <RouterLink to="/" class="text-3xl font-bold"> Evnto </RouterLink>
     <div>
       <div class="flex justify-center">
         <button

@@ -1,6 +1,6 @@
 import { genericRequest } from "@/utils/genericRequest";
 import { LogService } from "../LogService/logService";
-import type { Event } from "@/interfaces/Event/event";
+import type { Event, EventForm } from "@/interfaces/Event/event";
 
 const baseUrl = import.meta.env.VITE_EVENT_URL;
 
@@ -31,8 +31,6 @@ export const getEventsByUser = async (idUser: number) => {
       baseUrl + `/GetEventsByUser/${idUser}`,
       "GET"
     );
-    console.log(response);
-    
     return response;
   } catch (error) {
     await handleError(error, "getEventsByUser");
@@ -41,7 +39,10 @@ export const getEventsByUser = async (idUser: number) => {
 
 export const getEventById = async (id: number) => {
   try {
-    const response = await genericRequest(baseUrl + `/GetEventById/${id}`, "GET");
+    const response = await genericRequest(
+      baseUrl + `/GetEventById/${id}`,
+      "GET"
+    );
     return response;
   } catch (error) {
     await handleError(error, "getEventById");
@@ -52,8 +53,32 @@ export const postEvent = async (data: any) => {
   try {
     const response = await genericRequest(baseUrl + "/Create", "POST", data);
     return response;
-    // console.log(data);
   } catch (error) {
     await handleError(error, "postEvent");
+  }
+};
+
+export const putEvent = async (idEvent: number, data:any) => {
+  try {
+    const response = await genericRequest(
+      baseUrl + `/Update/${idEvent}`,
+      "PUT",
+      data
+    );
+    return response;
+  } catch (error) {
+    await handleError(error, "putEvent");
+  }
+};
+
+export const deleteEvent = async (id: number) => {
+  try {
+    const response = await genericRequest(
+      baseUrl + `/Delete/${id}`,
+      "DELETE"
+    );
+    return response;
+  } catch (error) {
+    await handleError(error, "deleteEvent");
   }
 };

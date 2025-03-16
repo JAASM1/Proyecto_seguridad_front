@@ -23,6 +23,8 @@ const router = useRouter();
 
 const submitForm = async (event: Event) => {
   try {
+    console.log(event);
+    
     const response = await eventStore.actions.createEvent(event);
     if (response.status === 200) {
       toast.add({
