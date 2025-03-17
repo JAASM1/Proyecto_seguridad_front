@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import FormCreate from "@/views/Event/FormCreateView.vue";
 import FormEdit from "@/views/Event/FormEditView.vue";
-import FormDetailsView from "@/views/Event/FormDetailsView.vue";
+import DetailsEventView from "@/views/Event/DetailsEventView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,7 +25,7 @@ const router = createRouter({
     {
       path: "/detalles-evento/:id",
       name: "detalles-evento",
-      component: FormDetailsView,
+      component: DetailsEventView,
     },
   ],
 });

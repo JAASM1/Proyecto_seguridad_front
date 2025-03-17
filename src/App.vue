@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Menu from "primevue/menu";
 import { Bars3Icon } from "@heroicons/vue/24/solid";
+import Toast from "primevue/toast";
 
 const router = useRouter();
 const menu = ref(null);
@@ -48,6 +49,7 @@ const toggle = (event: Event) => {
     </div>
   </header>
   <div class="bg-Dark px-6 min-h-screen">
+    <Toast />
     <RouterView />
   </div>
 </template>
