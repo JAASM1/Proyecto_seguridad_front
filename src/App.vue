@@ -20,6 +20,14 @@ const items = ref([
         label: "Crear Evento",
         command: () => router.push("/crear-evento"),
       },
+      {
+        label: "Inicia sesion",
+        command: () => router.push("/login"),
+      },
+      {
+        label: "Registro",
+        command: () => router.push("/register"),
+      }
     ],
   },
 ]);
@@ -51,5 +59,6 @@ const toggle = (event: Event) => {
   <div class="bg-Dark px-6 min-h-screen">
     <Toast />
     <RouterView />
+    <RouterView>login</RouterView>
   </div>
 </template>

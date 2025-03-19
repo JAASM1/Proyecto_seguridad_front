@@ -4,6 +4,8 @@ import FormCreate from "@/views/Event/FormCreateView.vue";
 import FormEdit from "@/views/Event/FormEditView.vue";
 import DetailsEventView from "@/views/Event/DetailsEventView.vue";
 import Invitation from '../views/Invitation/InvitationView.vue'
+import LoginView from '@/views/Auts/LoginView.vue'
+import RegisterView from '@/views/Auts/Register.View.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
