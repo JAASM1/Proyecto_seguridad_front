@@ -1,55 +1,22 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import Menu from "primevue/menu";
-import { Bars3Icon } from "@heroicons/vue/24/solid";
 import Toast from "primevue/toast";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import AuthLayout from "./Layouts/AuthLayout.vue";
+import AppLayout from "./Layouts/AppLayout.vue";
 
-const router = useRouter();
-const menu = ref(null);
+const route = useRoute();
 
-const items = ref([
-  {
-    label: "Opciones",
-    items: [
-      {
-        label: "Eventos",
-        command: () => router.push("/"),
-      },
-      {
-        label: "Crear Evento",
-        command: () => router.push("/crear-evento"),
-      },
-    ],
-  },
-]);
-
-const toggle = (event: Event) => {
-  menu.value?.toggle(event);
-};
+const layout = computed(() => {
+  return route.meta.layout === "AuthLayout" ? AuthLayout : AppLayout;
+});
 </script>
 
 <template>
-  <header
-    class="font-poppins bg-Dark text-white px-6 py-4 flex items-center justify-between"
-  >
-    <RouterLink to="/" class="text-3xl font-bold"> Evnto </RouterLink>
-    <div>
-      <div class="flex justify-center">
-        <button
-          type="button"
-          @click="toggle($event)"
-          aria-haspopup="true"
-          aria-controls="overlay_menu"
-        >
-          <Bars3Icon class="size-7" />
-        </button>
-        <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
-      </div>
-    </div>
-  </header>
   <div class="bg-Dark px-6 min-h-screen">
     <Toast />
-    <RouterView />
+    <component :is="layout">
+      <RouterView />
+    </component>
   </div>
 </template>
