@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Menu from "primevue/menu";
 import { Bars3Icon } from "@heroicons/vue/24/solid";
+import Toast from "primevue/toast";
 
 const router = useRouter();
 const menu = ref(null);
@@ -40,7 +41,7 @@ const toggle = (event: Event) => {
   <header
     class="font-poppins bg-Dark text-white px-6 py-4 flex items-center justify-between"
   >
-    <h1 class="text-3xl font-bold">Evnto</h1>
+    <RouterLink to="/" class="text-3xl font-bold"> Evnto </RouterLink>
     <div>
       <div class="flex justify-center">
         <button
@@ -55,7 +56,8 @@ const toggle = (event: Event) => {
       </div>
     </div>
   </header>
-  <div class="font-poppins bg-Dark max-md:px-6 min-h-screen">
+  <div class="bg-Dark px-6 min-h-screen">
+    <Toast />
     <RouterView />
     <RouterView>login</RouterView>
   </div>
