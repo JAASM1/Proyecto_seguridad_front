@@ -27,7 +27,7 @@
       </form>
       
       <p class="text-gray-400 text-center mt-4">
-        <a href="#" class="text-teal-400 hover:underline">¿Olvidaste tu contraseña?</a>
+        <a href="/RecoverPassword" class="text-teal-400 hover:underline">¿Olvidaste tu contraseña?</a>
       </p>
       <p class="text-gray-400 text-center mt-2">
         ¿No tienes cuenta? <a href="/register" class="text-teal-400 hover:underline">Regístrate</a>

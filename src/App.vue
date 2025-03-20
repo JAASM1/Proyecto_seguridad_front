@@ -20,14 +20,7 @@ const items = ref([
         label: "Crear Evento",
         command: () => router.push("/crear-evento"),
       },
-      {
-        label: "Inicia sesion",
-        command: () => router.push("/login"),
-      },
-      {
-        label: "Registro",
-        command: () => router.push("/register"),
-      }
+      
     ],
   },
 ]);
