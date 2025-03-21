@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-gray-900">
-    <div class="w-full max-w-md p-8 bg-gray-950 rounded-lg shadow-lg">
+  <div class="flex justify-center items-center min-h-screen">
+    <div class="w-full max-w-md p-8 bg-cpnDark rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold text-white mb-2">Iniciar sesión</h2>
       <p class="text-gray-400 mb-6">Por favor llena los siguientes campos</p>
       
@@ -27,7 +27,7 @@
       </form>
       
       <p class="text-gray-400 text-center mt-4">
-        <a href="#" class="text-teal-400 hover:underline">¿Olvidaste tu contraseña?</a>
+        <a href="/RecoverPassword" class="text-teal-400 hover:underline">¿Olvidaste tu contraseña?</a>
       </p>
       <p class="text-gray-400 text-center mt-2">
         ¿No tienes cuenta? <a href="/register" class="text-teal-400 hover:underline">Regístrate</a>
@@ -36,7 +36,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   data() {
     return {
