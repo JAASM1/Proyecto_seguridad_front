@@ -4,8 +4,6 @@ import FormCreate from "@/views/Event/FormCreateView.vue";
 import FormEdit from "@/views/Event/FormEditView.vue";
 import DetailsEventView from "@/views/Event/DetailsEventView.vue";
 import Invitation from '@/views/Invitation/InvitationView.vue';
-import LoginView from '@/views/Auts/LoginView.vue';
-import RegisterView from '@/views/Auts/Register.View.vue';
 
 import AppLayout from "@/Layouts/AppLayout.vue";
 import AuthLayout from "@/Layouts/AuthLayout.vue";
