@@ -49,6 +49,9 @@ const router = createRouter({
       path:'/invitacion/:token',
       name: 'invitacion',
       component: Invitation,
+      meta: {
+        layout: AppLayout,
+      },
     }
   ],
 });
