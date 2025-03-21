@@ -8,7 +8,7 @@ import AppLayout from "./Layouts/AppLayout.vue";
 const route = useRoute();
 
 const layout = computed(() => {
-  return route.meta.layout === "AuthLayout" ? AuthLayout : AppLayout;
+  return route.meta.layout == "AuthLayout" ? AuthLayout : AppLayout;
 });
 </script>
 

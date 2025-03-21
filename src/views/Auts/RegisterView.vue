@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-gray-900">
-    <div class="w-full max-w-md p-8 bg-gray-950 rounded-lg shadow-lg">
+  <div class="flex justify-center items-center min-h-screen">
+    <div class="w-full max-w-md p-8 bg-cpnDark rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold text-white mb-2">Crea tu cuenta</h2>
       <p class="text-gray-400 mb-6">Por favor llena los siguientes campos</p>
       

@@ -3,13 +3,13 @@ import HomeView from "../views/HomeView.vue";
 import FormCreate from "@/views/Event/FormCreateView.vue";
 import FormEdit from "@/views/Event/FormEditView.vue";
 import DetailsEventView from "@/views/Event/DetailsEventView.vue";
-import Invitation from '@/views/Invitation/InvitationView.vue';
+import Invitation from "@/views/Invitation/InvitationView.vue";
 
 import AppLayout from "@/Layouts/AppLayout.vue";
 import AuthLayout from "@/Layouts/AuthLayout.vue";
-import LoginView from "../views/Auts/LoginView.vue";
-import RegisterView from "../views/Auts/RegisterView.vue";
-import RecoverPassword from "../views/Auts/RecoverPassword.vue";
+import LoginView from "@/views/Auts/LoginView.vue";
+import RegisterView from "@/views/Auts/RegisterView.vue";
+import RecoverPassword from "@/views/Auts/RecoverPassword.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,7 +19,7 @@ const router = createRouter({
       name: "home",
       component: HomeView,
       meta: {
-        layout: AppLayout,
+        layout: "AppLayout",
       },
     },
     {
@@ -27,7 +27,7 @@ const router = createRouter({
       name: "crear-evento",
       component: FormCreate,
       meta: {
-        layout: AppLayout,
+        layout: "AppLayout",
       },
     },
     {
@@ -35,7 +35,7 @@ const router = createRouter({
       name: "editar-evento",
       component: FormEdit,
       meta: {
-        layout: AppLayout,
+        layout: "AppLayout",
       },
     },
     {
@@ -43,15 +43,15 @@ const router = createRouter({
       name: "detalles-evento",
       component: DetailsEventView,
       meta: {
-        layout: AppLayout,
+        layout: "AppLayout",
       },
     },
     {
-      path:'/invitacion/:token',
-      name: 'invitacion',
+      path: "/invitacion/:token",
+      name: "invitacion",
       component: Invitation,
       meta: {
-        layout: AppLayout,
+        layout: "AppLayout",
       },
     },
     {
@@ -59,7 +59,7 @@ const router = createRouter({
       name: "login",
       component: LoginView,
       meta: {
-        layout: AuthLayout,
+        layout: "AuthLayout",
       },
     },
     {
@@ -67,17 +67,17 @@ const router = createRouter({
       name: "registro",
       component: RegisterView,
       meta: {
-        layout: AuthLayout,
+        layout: "AuthLayout",
       },
     },
     {
-      path: "/cambio-contraseña",
+      path: "/cambio-contrasena",
       name: "cambio-contraseña",
       component: RecoverPassword,
       meta: {
-        layout: AuthLayout,
+        layout: "AuthLayout",
       },
-    }
+    },
   ],
 });
 
