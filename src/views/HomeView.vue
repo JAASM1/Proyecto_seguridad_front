@@ -27,6 +27,7 @@ const itemEvents = ref<Event[]>([]);
 const fetchEvents = async () => {
   try {
     const response = await events.actions.getAllEvents();
+    console.log(response)
     if (response?.status === 200) {
       itemEvents.value = events.state.events;
     }

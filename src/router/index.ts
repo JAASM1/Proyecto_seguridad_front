@@ -3,9 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import FormCreate from "@/views/Event/FormCreateView.vue";
 import FormEdit from "@/views/Event/FormEditView.vue";
 import DetailsEventView from "@/views/Event/DetailsEventView.vue";
-import Login from "@/views/Auts/LoginView.vue";
-import Register from "@/views/Auts/RegisterView.vue";
-import RecoverPassword from "@/views/Auts/RecoverPassword.vue";
+import Invitation from '@/views/Invitation/InvitationView.vue';
 
 import AppLayout from "@/Layouts/AppLayout.vue";
 import AuthLayout from "@/Layouts/AuthLayout.vue";
@@ -46,20 +44,13 @@ const router = createRouter({
       },
     },
     {
-      path: "/login",
-      name: "login",
-      component: Login,
-    },
-    {
-      path: "/register",
-      name: "register",
-      component: Register,
-    },
-    {
-      path: "/RecoverPassword",
-      name: "RecoverPassword",
-      component: RecoverPassword,
-    },
+      path:'/invitacion/:token',
+      name: 'invitacion',
+      component: Invitation,
+      meta: {
+        layout: AppLayout,
+      },
+    }
   ],
 });
 

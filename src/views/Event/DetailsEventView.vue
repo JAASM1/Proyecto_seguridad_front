@@ -239,7 +239,7 @@ const fetchEvent = async () => {
 // Copiar enlace al portapapeles - Alex
 const copyToClipboard = async () => {
   try {
-    const eventUrl = `${url}${event.value?.id}`;
+    const eventUrl = `${url}${event.value?.token}`;
     await navigator.clipboard.writeText(eventUrl);
     toast.add({
       severity: "success",
