@@ -101,7 +101,12 @@
 import { RegisterValidation } from "@/Validations/Auth/authValidation";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import { ref } from "vue";
+import { useUserStore } from "@/stores/auth/user";
+import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
 
+const userStore = useUserStore();
+const router = useRouter();
 const name = ref("");
 const email = ref("");
 const password = ref("");
@@ -113,9 +118,27 @@ interface RegisterForm {
   password: string;
 }
 
-const register = (values: RegisterForm) => {
-  console.log(values);
+const register = async (values: RegisterForm) => {
+  try {
+    await userStore.RegisterStore(values);
+    Swal.fire({
+      title: "¡Registro exitoso!",
+      text: "Tu cuenta ha sido creada correctamente",
+      icon: "success",
+      confirmButtonColor: "#38b2ac",
+    });
+    router.push("/login"); 
+  } catch (error) {
+    console.error("Error en el registro:", error);
+    Swal.fire({
+      title: "Error en el registro",
+      text: "Hubo un problema, intenta nuevamente",
+      icon: "error",
+      confirmButtonColor: "#e53e3e",
+    });
+  }
 };
+
 </script>
 
 <style>

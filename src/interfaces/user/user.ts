@@ -10,4 +10,3 @@ export interface Iauth{
     user: Iuser;
     token: string;
 }
-

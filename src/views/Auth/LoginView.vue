@@ -64,20 +64,44 @@
 
 <script setup lang="ts">
 import { loginValidation } from "@/Validations/Auth/authValidation";
-import { Field, Form, ErrorMessage } from "vee-validate";
+import { Form, Field, ErrorMessage } from "vee-validate";
 import { ref } from "vue";
-import { LockClosedIcon, EnvelopeIcon } from "@heroicons/vue/24/outline";
+import { useUserStore } from "@/stores/auth/user";
+import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
+
+const userStore = useUserStore();
+const router = useRouter();
 
 const email = ref("");
 const password = ref("");
 
-interface FormValues {
+interface LoginForm {
   email: string;
   password: string;
 }
 
-const login = (value: FormValues) => {
-  console.log(value.email, value.password);
+const login = async (values: LoginForm) => {
+  try {
+    await userStore.LoginStore(values);
+    
+    Swal.fire({
+      title: "¡Inicio de sesión exitoso!",
+      text: "Bienvenido de nuevo",
+      icon: "success",
+      confirmButtonColor: "#38b2ac",
+    });
+
+    router.push("/"); 
+  } catch (error) {
+    console.error("Error en el inicio de sesión:", error);
+    Swal.fire({
+      title: "Error",
+      text: "Correo o contraseña incorrectos",
+      icon: "error",
+      confirmButtonColor: "#e53e3e",
+    });
+  }
 };
 </script>
 
