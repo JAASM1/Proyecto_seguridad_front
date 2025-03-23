@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="flex space-x-2">
-        <!-- Boton para ver invitados -->
+        <!-- Boton para lista de invitados -->
         <div class="flex flex-1">
           <button
             @click="showGuestListModal = true"
@@ -93,82 +93,13 @@
     </div>
 
     <!-- Modal de invitados -->
-    <Dialog
-      v-model:visible="showGuestListModal"
-      modal
-      header="Invitados Agregados"
-      :style="{ width: '500px' }"
-      :breakpoints="{ '960px': '75vw', '641px': '90vw' }"
-      class="[&_.p-dialog-header]:bg-Dark [&_.p-dialog-content]:bg-Dark [&_.p-dialog-footer]:bg-Dark [&_.p-dialog-title]:text-white [&_.p-dialog-header-icon]:text-white"
-    >
-      <div class="space-y-4">
-        <div
-          v-for="(guest, index) in guests"
-          :key="index"
-          class="border-b pb-4"
-        >
-          <div class="flex justify-between items-start">
-            <div>
-              <p class="font-semibold text-white">{{ guest.name }}</p>
-              <p class="text-white text-sm opacity-40">{{ guest.email }}</p>
-            </div>
-
-            <div class="flex gap-2 items-center">
-              <Button
-                @click="toggleStatus(guest, RegistrationStatus.Accepted)"
-                :severity="
-                  guest.status === RegistrationStatus.Accepted
-                    ? 'success'
-                    : 'secondary'
-                "
-                text
-                rounded
-                :label="'Aceptada'"
-              />
-              <Button
-                @click="toggleStatus(guest, RegistrationStatus.Cancelled)"
-                :severity="
-                  guest.status === RegistrationStatus.Cancelled
-                    ? 'danger'
-                    : 'secondary'
-                "
-                text
-                rounded
-                :label="'Cancelada'"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                  :class="
-                    guest.status === RegistrationStatus.Cancelled
-                      ? 'text-red-500'
-                      : 'text-gray-500'
-                  "
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                  />
-                </svg>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <template #footer>
-        <Button
-          label="Cerrar"
-          @click="showGuestListModal = false"
-          class="p-button-text"
-        />
-      </template>
-    </Dialog>
+  <ModalEvent
+    :visible="showGuestListModal"
+    :guests="guests"
+    :eventId="eventId"
+    @update:visible="showGuestListModal = $event"
+    @guest-updated="fetchGuests"
+  />
   </div>
 </template>
 
@@ -190,6 +121,7 @@ import { useEventStore } from "@/stores/Event/event";
 import DetailsEvent from "@/components/Event/DetailsEvent.vue";
 import type { Event } from "@/interfaces/Event/event";
 import { formatDate } from "@/utils/dateUtils";
+import ModalEvent from "@/components/Event/ModalEvent.vue";
 
 const router = useRouter();
 //Esta linea te extrae el id del evento
@@ -212,14 +144,11 @@ interface Guest {
   status: RegistrationStatus;
   idInvitation?: number;
 }
-
-// Estados posibles
 enum RegistrationStatus {
   Pending = "Pending",
   Accepted = "Accepted",
   Cancelled = "Cancelled",
 }
-
 const event = ref<Event & { token?: string }>();
 
 //Informacion de evento - Alex
@@ -260,64 +189,27 @@ const copyToClipboard = async () => {
 
 const guests = ref<Guest[]>([]);
 
-// Obtener invitados del evento
+// Obtener invitados
 const fetchGuests = async () => {
-  if (!currentEventId.value) return;
-
   try {
     const response = await axios.get(
-      `https://localhost:7161/api/Event/GetEventById/${currentEventId.value}`
+      `${import.meta.env.VITE_API_URL}/Event/GetEventGuests/${eventId}`
     );
-    console.log(response.data);
-
-    guests.value = response.data.invitations.map((inv: any) => ({
-      id: inv.guest.id,
-      name: inv.guest.name,
-      email: inv.guest.email,
-      status: inv.guestRegistration?.status || RegistrationStatus.Pending,
-      idInvitation: inv.id,
-    }));
+    guests.value = response.data.map((guest: any) => ({
+  id: guest.Id,
+  name: guest.Name,
+  email: guest.Email,
+  status: guest.Status as RegistrationStatus,
+  idInvitation: guest.InvitationId
+}));
   } catch (error) {
-    console.error("Error fetching guests:", error);
-  }
-};
-
-// Actualizar estado de invitado
-const toggleStatus = async (guest: Guest, status: RegistrationStatus) => {
-  try {
-    await axios.put(
-      `https://localhost:7161/api/Invitation/UpdateStatus/${guest.idInvitation}`,
-      { status }
-    );
-
-    guest.status = status;
+    console.error('Error fetching guests:', error);
     toast.add({
-      severity: "success",
-      summary: "Estado Actualizado",
-      detail: `Estado cambiado a ${status}`,
-      life: 2000,
+      severity: 'error',
+      summary: 'Error',
+      detail: 'No se pudieron cargar los invitados',
+      life: 3000
     });
-  } catch (error) {
-    console.error("Error updating status:", error);
-  }
-};
-
-// Eliminar invitado
-const deleteGuest = async (guest: Guest) => {
-  try {
-    await axios.delete(
-      `https://localhost:7161/api/Invitation/Delete/${guest.idInvitation}`
-    );
-
-    guests.value = guests.value.filter((g) => g.id !== guest.id);
-    toast.add({
-      severity: "success",
-      summary: "Invitado Eliminado",
-      detail: "Invitado removido del evento",
-      life: 2000,
-    });
-  } catch (error) {
-    console.error("Error deleting guest:", error);
   }
 };
 
@@ -351,4 +243,5 @@ onMounted(() => {
     fetchGuests();
   }
 });
+
 </script>
