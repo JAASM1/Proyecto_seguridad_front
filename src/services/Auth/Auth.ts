@@ -17,3 +17,12 @@ export const register = async(registe : Iuser) => {
         password: registe.password,
     })
 }
+
+export const isAuthenticated = () =>{
+    const token = localStorage.getItem("token");
+     return token !== null && token !== "" && token !== "{}";
+}
+
+export const logout = () =>{
+    localStorage.removeItem("token");
+}
