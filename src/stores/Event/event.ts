@@ -4,9 +4,11 @@ import type { Event, EventForm } from "@/interfaces/Event/event";
 
 import { defineStore } from "pinia";
 import { reactive } from "vue";
+import { useUserStore } from "../auth/user";
 
-const idUser = 1;
+
 export const useEventStore = defineStore("event", () => {
+  const idUser = useUserStore().auth.user.id
   const state = reactive({
     events: [] as Event[],
     loading: false,
