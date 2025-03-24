@@ -8,6 +8,7 @@ import Invitation from "@/views/Invitation/InvitationView.vue";
 import LoginView from "@/views/Auth/LoginView.vue";
 import RegisterView from "@/views/Auth/RegisterView.vue";
 import RecoverPassword from "@/views/Auth/RecoverPassword.vue";
+import notfound from "@/views/Auth/404View.vue";
 import { isAuthenticated } from "@/services/Auth/Auth";
 
 const router = createRouter({
@@ -81,6 +82,11 @@ const router = createRouter({
       meta: {
         layout: "AuthLayout",
       },
+    },
+    {
+      path: "/notfound",
+      name: "error404",
+      component: notfound
     },
   ],
 });
