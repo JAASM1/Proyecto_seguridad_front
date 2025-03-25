@@ -1,8 +1,10 @@
 import { genericRequest } from "@/utils/genericRequest";
 import { LogService } from "../LogService/logService";
 import type { Event, EventForm } from "@/interfaces/Event/event";
+import type { Iauth } from "@/interfaces/user/user";
 
 const baseUrl = import.meta.env.VITE_EVENT_URL;
+const auth: Iauth | null = JSON.parse(localStorage.getItem('token') || 'null');
 
 const handleError = async (error: any, context: string) => {
   const errorMessage = `Error during ${context}: ${error.message}`;
@@ -29,7 +31,9 @@ export const getEventsByUser = async (idUser: number) => {
   try {
     const response = await genericRequest(
       baseUrl + `/GetEventsByUser/${idUser}`,
-      "GET"
+      "GET",
+      undefined,
+      auth?.accessToken
     );
     return response;
   } catch (error) {
@@ -41,7 +45,9 @@ export const getEventById = async (id: number) => {
   try {
     const response = await genericRequest(
       baseUrl + `/GetEventById/${id}`,
-      "GET"
+      "GET",
+      undefined,
+      auth?.accessToken
     );
     return response;
   } catch (error) {

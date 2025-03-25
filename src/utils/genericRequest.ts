@@ -1,17 +1,20 @@
 import axios from "axios";
 import { LogService } from "@/services/LogService/logService";
 
+
 export const genericRequest = async (
   url: string,
   method: string,
-  body?: any
+  body?: any,
+  token?: string,
 ) => {
   try {
     const response = await axios({
-      url: url,
-      method: method,
+      url,
+      method,
       headers: {
         "Content-Type": "application/json",
+        ...(token && { 'Authorization': `Bearer ${token}` }),
       },
       data: body,
     });
