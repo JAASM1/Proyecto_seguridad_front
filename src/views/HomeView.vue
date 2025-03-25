@@ -35,8 +35,6 @@ const fetchEvents = async () => {
   }
 };
 
-
-// const editEvent = (id: number) => roueter.push(`/editar-evento/${id}`);
 const detailsEvent = (id: number) => roueter.push(`/detalles-evento/${id}`);
 
 onMounted(() => {

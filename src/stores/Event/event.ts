@@ -7,13 +7,16 @@ import { reactive } from "vue";
 import { useUserStore } from "../auth/user";
 
 
+
 export const useEventStore = defineStore("event", () => {
-  const idUser = useUserStore().auth.user.id
+  const auth = useUserStore();
   const state = reactive({
     events: [] as Event[],
     loading: false,
     error: null as string | null,
   });
+
+  const idUser = auth.getUserIdFromToken();  
 
   const actions = {
     async getAllEvents() {
@@ -21,6 +24,7 @@ export const useEventStore = defineStore("event", () => {
       try {
         const response = await getEventsByUser(idUser);
         state.events = response?.data || [];
+        console.log(idUser);
         return response;
       } catch (error: any) {
         state.error = error.message;
@@ -49,7 +53,7 @@ export const useEventStore = defineStore("event", () => {
         const data = {
           ...event,
           eventDateTime: event.eventDateTime?.toISOString(),
-          idOrganizer: 1,
+          idOrganizer: idUser,
         };
         const response = await postEvent(data);
 
