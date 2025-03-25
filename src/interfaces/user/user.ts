@@ -9,5 +9,6 @@ export type Iuserlogin = Omit <Iuser, "name">
 
 export interface Iauth{
     user: Iuser;
-    token: string;
+    accessToken: string,
+    refreshToken: string;
 }
