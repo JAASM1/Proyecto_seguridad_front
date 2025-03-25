@@ -7,6 +7,7 @@ import { reactive } from "vue";
 import { useUserStore } from "../auth/user";
 
 
+
 export const useEventStore = defineStore("event", () => {
   const auth = useUserStore();
   const state = reactive({

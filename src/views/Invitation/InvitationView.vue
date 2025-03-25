@@ -71,7 +71,6 @@
         <!-- Botones -->
         <div class="flex justify-between mt-4">
           <button
-            @click="registrarse"
             class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg w-1/2 mr-2"
           >
             Aceptar
