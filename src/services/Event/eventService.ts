@@ -4,8 +4,7 @@ import type { Event, EventForm } from "@/interfaces/Event/event";
 import type { Iauth } from "@/interfaces/user/user";
 
 const baseUrl = import.meta.env.VITE_EVENT_URL;
-const auth: Iauth | null = JSON.parse(localStorage.getItem('token') || 'null');
-
+const auth: Iauth | null = JSON.parse(localStorage.getItem("token") || "null");
 const handleError = async (error: any, context: string) => {
   const errorMessage = `Error during ${context}: ${error.message}`;
   console.error(errorMessage);
@@ -26,7 +25,6 @@ const handleError = async (error: any, context: string) => {
   throw error;
 };
 
-//Por arreglar
 export const getEventsByUser = async (idUser: number) => {
   try {
     const response = await genericRequest(
@@ -64,7 +62,7 @@ export const postEvent = async (data: any) => {
   }
 };
 
-export const putEvent = async (idEvent: number, data:any) => {
+export const putEvent = async (idEvent: number, data: any) => {
   try {
     const response = await genericRequest(
       baseUrl + `/Update/${idEvent}`,
@@ -79,12 +77,22 @@ export const putEvent = async (idEvent: number, data:any) => {
 
 export const deleteEvent = async (id: number) => {
   try {
-    const response = await genericRequest(
-      baseUrl + `/Delete/${id}`,
-      "DELETE"
-    );
+    const response = await genericRequest(baseUrl + `/Delete/${id}`, "DELETE");
     return response;
   } catch (error) {
     await handleError(error, "deleteEvent");
   }
 };
+
+export const CreateInvitation = async (idevent: number, iduser: number) => {
+  try {
+    const response = await genericRequest(`${baseUrl}/CreateInvitation`, "POST", {
+      idEvent: idevent,
+      idUser: iduser
+    }, auth?.accessToken)
+
+    return response;
+  } catch(error) {
+    await handleError(error, "CreateInvitationEvent")
+  }
+}

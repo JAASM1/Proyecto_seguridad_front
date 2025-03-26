@@ -6,6 +6,7 @@ export interface Iuser {
 }
 
 export type Iuserlogin = Omit <Iuser, "name">
+export type IUserRegister = Omit<Iuser, 'id'>
 
 export interface Iauth{
     user: Iuser;

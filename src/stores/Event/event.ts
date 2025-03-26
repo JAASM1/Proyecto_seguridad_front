@@ -1,5 +1,5 @@
 import { LogService } from "@/services/LogService/logService";
-import { getEventsByUser, postEvent, getEventById, putEvent, deleteEvent } from "@/services/Event/eventService";
+import { getEventsByUser, postEvent, getEventById, putEvent, deleteEvent, CreateInvitation } from "@/services/Event/eventService";
 import type { Event, EventForm } from "@/interfaces/Event/event";
 
 import { defineStore } from "pinia";
@@ -104,6 +104,12 @@ export const useEventStore = defineStore("event", () => {
       try {
         const response = await deleteEvent(id);
         if (response && response.status === 200) {
+
+          // Hacer esto es incorrecto. Joshua Romero.
+          // Es mala practica jugar con el arreglo. Es mejor recargar el arreglo principal
+          // llamando al GetEventsAll y recargando al estado global de la aplicacion porque
+          // si ocurre un error habras eliminado para el usuario este y tambien le habras quitado
+          // al arreglo y aun asi cuando recargue se verá.
           const index = state.events.findIndex(e => e.id === id);
           if (index !== -1) {
             state.events.splice(index, 1);
@@ -119,7 +125,21 @@ export const useEventStore = defineStore("event", () => {
       } finally {
         state.loading = false;
       }
-    },
+    }, 
+
+    async CreateInvitationStore(idEvent: number, idUser: number){
+      try {
+        state.loading = true
+        const response = await CreateInvitation(idEvent, idUser);
+        return response;
+      } catch(error: unknown ) {
+        if (error instanceof Error) {
+          console.log("Error estándar:", error.message);
+        } else {
+          console.log("Error no estándar:", error);
+        }
+      }
+    }
   };
 
   return { state, actions };
