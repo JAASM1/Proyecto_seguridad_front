@@ -53,6 +53,20 @@ export const getEventById = async (id: number) => {
   }
 };
 
+export const getEventByInvitation = async (id: number) => {
+  try {
+    const response = await genericRequest(
+      baseUrl + `/GetEventByInvitation/${id}`,
+      "GET",
+      undefined,
+      auth?.accessToken
+    );
+    return response;
+  } catch (error) {
+    await handleError(error, "getEventByInvitation");
+  }
+}
+
 export const postEvent = async (data: any) => {
   try {
     const response = await genericRequest(baseUrl + "/Create", "POST", data);

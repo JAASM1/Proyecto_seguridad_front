@@ -30,6 +30,10 @@ const fetchEvents = async () => {
     if (response?.status === 200) {
       itemEvents.value = events.state.events;
     }
+    const invitations = await events.actions.GetEventByInvitation();
+    if (invitations?.status === 200 && invitations.data.length >= 1) {
+      itemEvents.value.push(...invitations.data);
+    }    
   } catch (error) {
     console.log(error);
   }
