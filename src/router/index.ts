@@ -56,8 +56,7 @@ const router = createRouter({
       name: "invitacion",
       component: Invitation,
       meta: {
-        layout: "AppLayout",
-        requiresAuth: true,
+        layout: "AuthLayout",
       },
     },
     {
@@ -112,11 +111,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !isAuthenticated()) {
+  const authenticated = isAuthenticated();
+  if (to.meta.requiresAuth && !authenticated) {
     next("/login");
+  } else if (to.path === "/login" && authenticated) {
+    next("/");
   } else {
     next();
   }
 });
+
 
 export default router;

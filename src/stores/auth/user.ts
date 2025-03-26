@@ -17,9 +17,7 @@ export const useUserStore = defineStore("auth", () => {
 
   async function RegisterStore(registe: Iuser) {
     const response = await register(registe);
-    if (response.data) {
-      auth.value = response.data;
-    }
+    return response;
   }
 
   async function Logout() {
@@ -27,23 +25,23 @@ export const useUserStore = defineStore("auth", () => {
     router.push("/login");
   }
 
-   function getUserIdFromToken(){
-   const tokenData = localStorage.getItem("token");
-   if (!tokenData) return null;
- 
-   try {
-     const { refreshToken } = JSON.parse(tokenData);
-     const tokenParts = refreshToken.split(".");
-     
-     if (tokenParts.length !== 3) return null;
- 
-     const payload = JSON.parse(atob(tokenParts[1]));
-     return payload.Id || null;
-   } catch (error) {
-     console.error("Error al decodificar el token:", error);
-     return null;
-   }
- }; 
+  function getUserIdFromToken() {
+    const tokenData = localStorage.getItem("token");
+    if (!tokenData) return null;
+
+    try {
+      const { refreshToken } = JSON.parse(tokenData);
+      const tokenParts = refreshToken.split(".");
+
+      if (tokenParts.length !== 3) return null;
+
+      const payload = JSON.parse(atob(tokenParts[1]));
+      return payload.Id || null;
+    } catch (error) {
+      console.error("Error al decodificar el token:", error);
+      return null;
+    }
+  }
 
   return { LoginStore, RegisterStore, auth, Logout, getUserIdFromToken };
 });

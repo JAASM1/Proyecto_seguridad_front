@@ -15,7 +15,8 @@
         :body="formatDate(event.eventDateTime)"
       />
       <DetailsEvent v-if="event" title="Ubicación" :body="event.location" />
-      <div class="bg-cpnDark rounded-lg p-3 flex flex-col gap-2 w-full">
+
+      <div class="bg-cpnDark rounded-lg p-3 flex flex-col gap-2 w-full" v-if="event?.idOrganizer == idUser">
         <p class="text-sm">Copia e invita por medio de este enlace</p>
         <span
           class="bg-white border-2 rounded-full border-white flex w-1/2"
@@ -30,64 +31,70 @@
           </button>
         </div>
       </div>
-      <div class="flex space-x-2">
-        <!-- Boton para ver invitados -->
-        <div class="flex flex-1">
-          <button
-            @click="showGuestListModal = true"
-            type="button"
-            class="p-2 px-5 bg-primary rounded-lg font-bold transition cursor-pointer flex items-center gap-2"
-          >
-            <p>Lista de invitados</p>
-            <UserGroupIcon class="size-6" />
-          </button>
-        </div>
-        <!-- Boton de editar -->
-        <button
-          @click="editEvent"
-          type="button"
-          class="p-2 hover:bg-gray-700 rounded-full transition cursor-pointer"
-        >
-          <PencilIcon class="size-6" />
-        </button>
-        <!-- Boton para eliminar evento !NO tocar¡ -->
-        <div class="card flex justify-center">
-          <button
-            class="p-2 hover:bg-gray-700 rounded-full transition cursor-pointer"
-            type="button"
-            @click="visible = true"
-          >
-            <TrashIcon class="size-6" />
-          </button>
-          <Dialog
-            v-model:visible="visible"
-            modal
-            header="Eliminar evento"
-            :style="{ width: '25rem' }"
-            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
-            class="rounded-lg overflow-hidden [&_.p-dialog-content]:bg-cpnDark [&_.p-dialog-header]:bg-cpnDark [&_.p-dialog-title]:text-white [&_.p-dialog-header-icon]:text-white"
-          >
-            <div
-              class="text-white font-poppins flex flex-col items-center gap-2"
+      <div>
+        <div class="flex space-x-2">
+          <!-- Boton para ver invitados -->
+          <div class="flex flex-1" v-if="event?.idOrganizer == idUser">
+            <button
+              @click="showGuestListModal = true"
+              type="button"
+              class="p-2 px-5 bg-primary rounded-lg font-bold transition cursor-pointer flex items-center gap-2"
             >
-              <p class="text-2xl font-semibold">¿Estas seguro?</p>
-              <p class="text-sm font-light">
-                Una vez eliminado no hay forma de recuperarlo
-              </p>
-              <ExclamationTriangleIcon
-                class="w-16 h-16 text-alert animate-pulse"
-              />
-            </div>
-            <div class="flex justify-center gap-10 mt-4">
-              <Button @click="deleteEvent" label="Eliminar" severity="warn" />
+              <p>Lista de invitados</p>
+              <UserGroupIcon class="size-6" />
+            </button>
+          </div>
+          <!-- Boton de editar -->
+          <button
+            v-if="event?.idOrganizer == idUser"
+            @click="editEvent"
+            type="button"
+            class="p-2 hover:bg-gray-700 rounded-full transition cursor-pointer"
+          >
+            <PencilIcon class="size-6" />
+          </button>
+          <!-- Boton para eliminar evento !NO tocar¡ -->
+          <div
+            class="card flex justify-center"
+            v-if="event?.idOrganizer == idUser"
+          >
+            <button
+              class="p-2 hover:bg-gray-700 rounded-full transition cursor-pointer"
+              type="button"
+              @click="visible = true"
+            >
+              <TrashIcon class="size-6" />
+            </button>
+            <Dialog
+              v-model:visible="visible"
+              modal
+              header="Eliminar evento"
+              :style="{ width: '25rem' }"
+              :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+              class="rounded-lg overflow-hidden [&_.p-dialog-content]:bg-cpnDark [&_.p-dialog-header]:bg-cpnDark [&_.p-dialog-title]:text-white [&_.p-dialog-header-icon]:text-white"
+            >
+              <div
+                class="text-white font-poppins flex flex-col items-center gap-2"
+              >
+                <p class="text-2xl font-semibold">¿Estas seguro?</p>
+                <p class="text-sm font-light">
+                  Una vez eliminado no hay forma de recuperarlo
+                </p>
+                <ExclamationTriangleIcon
+                  class="w-16 h-16 text-alert animate-pulse"
+                />
+              </div>
+              <div class="flex justify-center gap-10 mt-4">
+                <Button @click="deleteEvent" label="Eliminar" severity="warn" />
 
-              <Button
-                @click="visible = false"
-                label="Cancelar"
-                severity="secondary"
-              />
-            </div>
-          </Dialog>
+                <Button
+                  @click="visible = false"
+                  label="Cancelar"
+                  severity="secondary"
+                />
+              </div>
+            </Dialog>
+          </div>
         </div>
       </div>
     </div>
@@ -184,18 +191,24 @@ import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 import axios from "axios";
 import { useToast } from "primevue/usetoast";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useEventStore } from "@/stores/Event/event";
 import DetailsEvent from "@/components/Event/DetailsEvent.vue";
 import type { Event } from "@/interfaces/Event/event";
 import { formatDate } from "@/utils/dateUtils";
+import { useUserStore } from "@/stores/auth/user";
 
 const router = useRouter();
-//Esta linea te extrae el id del evento
+//Esta linea te extrae el id del evento - Alex
 const eventId = Number(router.currentRoute.value.params.id);
 const editEvent = () => router.push(`/editar-evento/${eventId}`);
 const eventStore = useEventStore();
+const userStore = useUserStore();
+
+const event = ref<Event & { token?: string; idOrganizer: any }>();
+const idUser = userStore.getUserIdFromToken();
+
 const url = import.meta.env.VITE_INVITATION_URL;
 
 const emit = defineEmits(["submit"]);
@@ -219,8 +232,6 @@ enum RegistrationStatus {
   Accepted = "Accepted",
   Cancelled = "Cancelled",
 }
-
-const event = ref<Event & { token?: string }>();
 
 //Informacion de evento - Alex
 const fetchEvent = async () => {
