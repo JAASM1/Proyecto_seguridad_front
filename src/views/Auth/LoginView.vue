@@ -50,7 +50,7 @@
       </Form>
 
       <p class="text-gray-400 text-center mt-4">
-        <a href="/RecoverPassword" class="text-teal-400 hover:underline"
+        <a href="/ForgotPassword" class="text-teal-400 hover:underline"
           >¿Olvidaste tu contraseña?</a
         >
       </p>

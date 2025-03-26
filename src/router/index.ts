@@ -9,6 +9,8 @@ import LoginView from "@/views/Auth/LoginView.vue";
 import RegisterView from "@/views/Auth/RegisterView.vue";
 import RecoverPassword from "@/views/Auth/RecoverPassword.vue";
 import { isAuthenticated } from "@/services/Auth/Auth";
+import ForgotPasswordView from "@/views/Auth/ForgotPasswordView.vue";
+import ResetPasswordView from "@/views/Auth/ResetPasswordView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -90,6 +92,22 @@ const router = createRouter({
         layout: "AuthLayout",
       },
     },
+    {
+      path: "/ForgotPassword",
+      name: "fogotpassword",
+      component: () => import("../views/Auth/ForgotPasswordView.vue"),
+      meta: {
+        layout: "AuthLayout",
+      }
+    },
+    {
+      path: "/ResetPassword",
+      name: "resetpassword",
+      component: ResetPasswordView,
+      meta:{
+        layout: "AuthLayout",
+      }
+    }
   ],
 });
 

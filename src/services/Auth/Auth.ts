@@ -40,3 +40,15 @@ export const isAuthenticated = () =>{
 export const logout = () =>{
     localStorage.removeItem("token");
 };
+
+export const forgotPassword = async (email: string) => {
+    return await genericRequest(`${BASE_URL}/forgot-password`, "post", { email });
+};
+
+export const resetPassword = async (token: string, newPassword: string, email: string) => {
+    return await genericRequest(`${BASE_URL}/reset-password`, "post", {
+        email,
+        token,
+        newPassword,
+    });
+};
