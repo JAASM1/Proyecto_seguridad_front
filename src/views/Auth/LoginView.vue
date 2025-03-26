@@ -3,7 +3,6 @@
     <div class="w-full max-w-md p-8 bg-cpnDark rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold text-white mb-2">Iniciar sesión</h2>
       <p class="text-gray-400 mb-6">Por favor llena los siguientes campos</p>
-
       <Form @submit="login" :validation-schema="loginValidation">
         <div class="mb-4">
           <label class="block text-gray-400 mb-1">Correo</label>
@@ -22,7 +21,6 @@
           </div>
           <ErrorMessage name="email" class="text-red-500 text-sm" />
         </div>
-
         <div class="mb-6">
           <label class="block text-gray-400 mb-1">Contraseña</label>
           <div
@@ -40,7 +38,6 @@
           </div>
           <ErrorMessage name="password" class="text-red-500 text-sm" />
         </div>
-
         <button
           type="submit"
           class="w-full bg-teal-500 text-white font-semibold py-2 rounded-lg hover:bg-teal-600 transition"
@@ -50,13 +47,15 @@
       </Form>
 
       <p class="text-gray-400 text-center mt-4">
-        <a href="/RecoverPassword" class="text-teal-400 hover:underline"
-          >¿Olvidaste tu contraseña?</a
+        <RouterLink to="/RecoverPassword" class="text-teal-400 hover:underline"
+          >¿Olvidaste tu contraseña?</RouterLink
         >
       </p>
       <p class="text-gray-400 text-center mt-2">
         ¿No tienes cuenta?
-        <a href="/register" class="text-teal-400 hover:underline">Regístrate</a>
+        <RouterLink to="/register" class="text-teal-400 hover:underline"
+          >Regístrate</RouterLink
+        >
       </p>
     </div>
   </div>
@@ -65,7 +64,6 @@
 <script setup lang="ts">
 import { loginValidation } from "@/Validations/Auth/authValidation";
 import { Form, Field, ErrorMessage } from "vee-validate";
-import { EnvelopeIcon, LockClosedIcon } from "@heroicons/vue/24/outline";
 import { ref } from "vue";
 import { useUserStore } from "@/stores/auth/user";
 import { useRouter } from "vue-router";
@@ -73,7 +71,6 @@ import Swal from "sweetalert2";
 
 const userStore = useUserStore();
 const router = useRouter();
-
 const email = ref("");
 const password = ref("");
 
@@ -85,7 +82,6 @@ interface LoginForm {
 const login = async (values: LoginForm) => {
   try {
     await userStore.LoginStore(values);
-    
     Swal.fire({
       title: "¡Inicio de sesión exitoso!",
       text: "Bienvenido de nuevo",
@@ -93,7 +89,7 @@ const login = async (values: LoginForm) => {
       confirmButtonColor: "#38b2ac",
     });
 
-    router.push("/"); 
+    router.push("/");
   } catch (error) {
     console.error("Error en el inicio de sesión:", error);
     Swal.fire({
