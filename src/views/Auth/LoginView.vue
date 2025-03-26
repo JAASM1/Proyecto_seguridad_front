@@ -65,6 +65,7 @@
 <script setup lang="ts">
 import { loginValidation } from "@/Validations/Auth/authValidation";
 import { Form, Field, ErrorMessage } from "vee-validate";
+import { EnvelopeIcon, LockClosedIcon } from "@heroicons/vue/24/outline";
 import { ref } from "vue";
 import { useUserStore } from "@/stores/auth/user";
 import { useRouter } from "vue-router";

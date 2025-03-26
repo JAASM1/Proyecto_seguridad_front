@@ -8,7 +8,6 @@ import Invitation from "@/views/Invitation/InvitationView.vue";
 import LoginView from "@/views/Auth/LoginView.vue";
 import RegisterView from "@/views/Auth/RegisterView.vue";
 import RecoverPassword from "@/views/Auth/RecoverPassword.vue";
-import notfound from "@/views/Auth/404View.vue";
 import { isAuthenticated } from "@/services/Auth/Auth";
 
 const router = createRouter({
@@ -20,7 +19,7 @@ const router = createRouter({
       component: HomeView,
       meta: {
         layout: "AppLayout",
-        requiresAuth: true 
+        requiresAuth: true,
       },
     },
     {
@@ -29,7 +28,7 @@ const router = createRouter({
       component: FormCreate,
       meta: {
         layout: "AppLayout",
-        requiresAuth: true
+        requiresAuth: true,
       },
     },
     {
@@ -38,7 +37,7 @@ const router = createRouter({
       component: FormEdit,
       meta: {
         layout: "AppLayout",
-        requiresAuth: true 
+        requiresAuth: true,
       },
     },
     {
@@ -47,7 +46,7 @@ const router = createRouter({
       component: DetailsEventView,
       meta: {
         layout: "AppLayout",
-        requiresAuth: true
+        requiresAuth: true,
       },
     },
     {
@@ -56,7 +55,7 @@ const router = createRouter({
       component: Invitation,
       meta: {
         layout: "AppLayout",
-        requiresAuth: true
+        requiresAuth: true,
       },
     },
     {
@@ -84,19 +83,19 @@ const router = createRouter({
       },
     },
     {
-      path: '/:pathMatch(.*)*',
+      path: "/:pathMatch(.*)*",
       name: "error404",
-      component: notfound,
-      meta : {
-        layout: "AuthLayout"
-      }
+      component: () => import("../views/Auth/404View.vue"),
+      meta: {
+        layout: "AuthLayout",
+      },
     },
   ],
 });
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isAuthenticated()) {
-    next("/login"); 
+    next("/login");
   } else {
     next();
   }
