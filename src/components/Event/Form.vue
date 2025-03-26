@@ -80,9 +80,9 @@
 
     <button
       type="submit"
-      class="font-bold bg-primary rounded-lg py-3 mt-5 cursor-pointer"
+      class="font-bold text-white bg-primary rounded-lg py-3 mt-5 cursor-pointer"
     >
-      Crear evento
+      Guardar evento
     </button>
   </Form>
 </template>

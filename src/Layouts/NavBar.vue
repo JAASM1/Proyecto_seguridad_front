@@ -38,10 +38,6 @@ const items = ref([
         command: () => router.push("/"),
       },
       {
-        label: "Crear Evento",
-        command: () => router.push("/crear-evento"),
-      },
-      {
         label: "Cerrar Sesión",
         command: () => auth.Logout(),
       },

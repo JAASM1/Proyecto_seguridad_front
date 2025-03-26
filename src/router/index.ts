@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import FormCreate from "@/views/Event/FormCreateView.vue";
-import FormEdit from "@/views/Event/FormEditView.vue";
 import DetailsEventView from "@/views/Event/DetailsEventView.vue";
 import Invitation from "@/views/Invitation/InvitationView.vue";
 
@@ -17,24 +16,6 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
-      meta: {
-        layout: "AppLayout",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/crear-evento",
-      name: "crear-evento",
-      component: FormCreate,
-      meta: {
-        layout: "AppLayout",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/editar-evento/:id",
-      name: "editar-evento",
-      component: FormEdit,
       meta: {
         layout: "AppLayout",
         requiresAuth: true,
@@ -96,7 +77,7 @@ router.beforeEach((to, from, next) => {
   const authenticated = isAuthenticated();
   if (to.meta.requiresAuth && !authenticated) {
     next("/login");
-  } else if (to.path === "/login" && authenticated) {
+  } else if ((to.path === "/login" || to.path === "/register") && authenticated) {
     next("/");
   } else {
     next();
