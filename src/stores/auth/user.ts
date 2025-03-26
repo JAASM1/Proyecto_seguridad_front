@@ -17,9 +17,7 @@ export const useUserStore = defineStore("auth", () => {
 
   async function RegisterStore(registe: Iuser) {
     const response = await register(registe);
-    if (response.data) {
-      auth.value = response.data;
-    }
+    return response;
   }
 
   async function Logout() {
