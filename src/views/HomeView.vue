@@ -92,7 +92,8 @@ const closeModal = () => {
 
 const submitCreateForm = async (event: Event) => {
   try {
-    await events.actions.createEvent(event);
+    const response = await events.actions.createEvent(event);
+    console.log(response);
     closeModal();
     await fetchEvents();
   } catch (error) {

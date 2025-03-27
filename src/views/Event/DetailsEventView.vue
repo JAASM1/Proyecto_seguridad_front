@@ -179,8 +179,6 @@ enum RegistrationStatus {
   Cancelled = "Cancelled",
 }
 
-const event = ref<Event & { token?: string }>();
-
 //Informacion de evento - Alex
 const fetchEvent = async () => {
   try {
