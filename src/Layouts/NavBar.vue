@@ -4,7 +4,7 @@
   >
     <RouterLink to="/" class="text-3xl font-bold dark:text-white"> Evnto </RouterLink>
     <div>
-      <BtnDarkMode />
+      <!-- <BtnDarkMode /> -->
       <div class="flex justify-center">
         <button
           type="button"

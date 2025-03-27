@@ -1,9 +1,9 @@
 <template>
-  <div class="bg-cpnDark rounded-lg p-3 flex flex-col gap-2">
+  <div class="bg-cpnDark rounded-lg p-3 flex flex-col gap-2 shadow shadow-Dark">
     <span>
       <h2 class="text-sm">{{ title }}</h2>
     </span>
-    <span class="bg-white border-2 rounded-full border-white flex w-1/2"></span>
+    <span class="bg-white border rounded-full border-white flex w-1/2"></span>
     <span>
       <p class="font-light text-justify">{{ body }}</p>
     </span>

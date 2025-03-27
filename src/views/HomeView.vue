@@ -10,7 +10,7 @@
             v-for="event in createdEvents"
             :key="event.id"
             :event="event"
-            @details="detailsEvent(event.id)"
+            @details="openDetailsModal(event.id)"
           />
         </div>
       </section>
@@ -25,7 +25,7 @@
             v-for="event in invitedEvents"
             :key="event.id"
             :event="event"
-            @details="detailsEvent(event.id)"
+            @details="openDetailsModal(event.id)"
           />
         </div>
       </section>
@@ -50,6 +50,17 @@
     >
       <Form v-if="modalMode === 'create'" @submit="submitCreateForm" />
     </Dialog>
+
+    <Dialog
+      v-model:visible="isDetailsVisible"
+      modal
+      header="Detalles del evento"
+      :style="{ width: '500px' }"
+      :breakpoints="{ '960px': '75vw', '641px': '90vw' }"
+      class="rounded-lg overflow-hidden [&_.p-dialog-content]:bg-cpnDark [&_.p-dialog-header]:bg-cpnDark [&_.p-dialog-title]:text-white [&_.p-dialog-header-icon]:text-white"
+    >
+      <DetailsEventView :eventId="selectedEvent || 0" @eventUpdated="updateEventInList" />
+    </Dialog>
   </main>
 </template>
 
@@ -62,15 +73,17 @@ import { useRouter } from "vue-router";
 import Form from "@/components/Event/Form.vue";
 import Dialog from "primevue/dialog";
 import { PlusIcon } from "@heroicons/vue/24/outline";
+import DetailsEventView from "./Event/DetailsEventView.vue";
 
 const roueter = useRouter();
 const events = useEventStore();
 const createdEvents = ref<Event[]>([]);
 const invitedEvents = ref<Event[]>([]);
 const isModalVisible = ref(false);
+const isDetailsVisible = ref(false);
 const modalTitle = ref("");
 const modalMode = ref<"create" | "edit">("create");
-const selectedEvent = ref<Event | null>(null);
+const selectedEvent = ref<number | null>(null); // Can be null initially
 
 const openCreateModal = () => {
   modalTitle.value = "Crear Evento";
@@ -78,16 +91,26 @@ const openCreateModal = () => {
   isModalVisible.value = true;
 };
 
-const openEditModal = (event: Event) => {
-  modalTitle.value = "Editar Evento";
-  modalMode.value = "edit";
-  selectedEvent.value = event;
-  isModalVisible.value = true;
+const openDetailsModal = (eventId: number) => {
+  selectedEvent.value = eventId;
+  isDetailsVisible.value = true;
 };
 
 const closeModal = () => {
   isModalVisible.value = false;
   selectedEvent.value = null;
+};
+const updateEventInList = (updatedEvent: Event) => {
+  const index = createdEvents.value.findIndex((e) => e.id === updatedEvent.id);
+  if (index !== -1) {
+    createdEvents.value[index] = updatedEvent;
+  }
+  const invitedIndex = invitedEvents.value.findIndex(
+    (e) => e.id === updatedEvent.id
+  );
+  if (invitedIndex !== -1) {
+    invitedEvents.value[invitedIndex] = updatedEvent;
+  }
 };
 
 const submitCreateForm = async (event: Event) => {
@@ -116,7 +139,6 @@ const fetchEvents = async () => {
   }
 };
 
-const detailsEvent = (id: number) => roueter.push(`/detalles-evento/${id}`);
 
 onMounted(() => {
   fetchEvents();
