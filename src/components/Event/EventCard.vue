@@ -16,6 +16,7 @@
         </p>
       </div>
       <div class="flex gap-3">
+        <!-- <button @click="$emit('edit', event)">Editar</button> -->
         <!-- Button to see details of the event -->
         <button @click="$emit('details')" class="cursor-pointer">
           <EyeIcon class="size-6" />

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="text-white space-y-5 font-poppins flex flex-col items-center pb-5"
+    class="text-white space-y-5 font-poppins flex flex-col items-center pb-5 mt-10"
   >
     <div class="space-y-3 w-full max-w-lg">
       <h2 class="text-2xl font-bold">{{ event?.name }}</h2>
@@ -47,7 +47,7 @@
           <!-- Boton de editar -->
           <button
             v-if="event?.idOrganizer == idUser"
-            @click="editEvent"
+            @click="openEditModal"
             type="button"
             class="p-2 hover:bg-gray-700 rounded-full transition cursor-pointer"
           >
@@ -98,6 +98,21 @@
         </div>
       </div>
     </div>
+
+    <Dialog
+      v-model:visible="showEditModal"
+      modal
+      header="Editar Evento"
+      :style="{ width: '500px' }"
+      :breakpoints="{ '960px': '75vw', '641px': '90vw' }"
+      class="rounded-lg overflow-hidden [&_.p-dialog-content]:bg-cpnDark [&_.p-dialog-header]:bg-cpnDark [&_.p-dialog-title]:text-white [&_.p-dialog-header-icon]:text-white"
+      >
+      <Form
+        v-if="event"
+        :event="event"
+        @submit="submitEditForm"
+      />
+    </Dialog>
 
     <!-- Modal de invitados -->
     <Dialog
@@ -198,6 +213,7 @@ import DetailsEvent from "@/components/Event/DetailsEvent.vue";
 import type { Event } from "@/interfaces/Event/event";
 import { formatDate } from "@/utils/dateUtils";
 import { useUserStore } from "@/stores/auth/user";
+import Form from "@/components/Event/Form.vue";
 
 const router = useRouter();
 //Esta linea te extrae el id del evento - Alex
@@ -205,7 +221,7 @@ const eventId = Number(router.currentRoute.value.params.id);
 const editEvent = () => router.push(`/editar-evento/${eventId}`);
 const eventStore = useEventStore();
 const userStore = useUserStore();
-
+const showEditModal = ref(false);
 const event = ref<Event & { token?: string; idOrganizer: any }>();
 const idUser = userStore.getUserIdFromToken();
 
@@ -244,6 +260,24 @@ const fetchEvent = async () => {
     event.value = eventFound.data;
   } catch (error) {
     console.error("Error fetching event:", error);
+  }
+};
+
+const openEditModal = () => {
+  showEditModal.value = true;
+};
+
+const submitEditForm = async (updatedEvent: Event) => {
+  try {
+    if (event.value) {
+      const response = await eventStore.actions.updateEvent(event.value.id, updatedEvent);
+      if (response.status === 200) {
+        showEditModal.value = false;
+        await fetchEvent(); // Actualiza los datos del evento en la vista
+      }
+    }
+  } catch (error) {
+    console.error("Error al editar el evento:", error);
   }
 };
 
