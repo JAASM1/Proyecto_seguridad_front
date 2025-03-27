@@ -13,7 +13,7 @@ const layout = computed(() => {
 </script>
 
 <template>
-  <div class="bg-Dark px-6 min-h-screen">
+  <div class="bg-bgWhite dark:bg-Dark px-6 min-h-screen">
     <Toast />
     <component :is="layout">
       <RouterView />

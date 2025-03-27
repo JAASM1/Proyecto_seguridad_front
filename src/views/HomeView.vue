@@ -1,9 +1,9 @@
 <template>
-  <main class="text-white space-y-3">
+  <main class="text-black dark:text-white space-y-3">
     <h1 class="text-2xl font-bold">Eventos</h1>
     <div class="flex w-full gap-10">
       <section v-if="createdEvents.length > 0" class="w-1/2">
-        <p v-if="createdEvents.length <= 0">Sin eventos creados</p>
+        <p v-if="createdEvents.length <= 0" class="text-black dark:text-white">Sin eventos creados</p>
         <p class="text-xl font-semibold mb-2">Tus eventos creados</p>
         <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
           <EventCard
@@ -16,7 +16,7 @@
       </section>
 
       <section v-if="invitedEvents.length > 0" class="w-1/2">
-        <p v-if="invitedEvents.length <= 0">Sin eventos creados</p>
+        <p v-if="invitedEvents.length <= 0" class="text-black dark:text-white">Sin eventos creados</p>
         <p class="text-xl font-semibold mb-2">
           Eventos a los que estas invitado
         </p>
@@ -31,14 +31,14 @@
       </section>
     </div>
     <!-- Mensaje si no hay eventos -->
-    <p v-if="createdEvents.length === 0 && invitedEvents.length === 0">
+    <p v-if="createdEvents.length === 0 && invitedEvents.length === 0" class="text-black dark:text-white">
       No tienes eventos creados ni invitaciones pendientes.
     </p>
     <button
       @click="openCreateModal"
-      class="fixed bottom-5 right-5 bg-primary text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary-dark"
+      class="fixed cursor-pointer bottom-5 right-5 bg-primary text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary-dark"
     >
-      <span class="text-2xl font-bold">+</span>
+      <span class="text-2xl font-bold"><PlusIcon class="size-8 stroke-3"/></span>
     </button>
     <Dialog
       v-model:visible="isModalVisible"
@@ -59,9 +59,9 @@ import EventCard from "@/components/Event/EventCard.vue";
 import type { Event } from "@/interfaces/Event/event";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import Modal from "@/components/Event/Modal.vue";
 import Form from "@/components/Event/Form.vue";
 import Dialog from "primevue/dialog";
+import { PlusIcon } from "@heroicons/vue/24/outline";
 
 const roueter = useRouter();
 const events = useEventStore();
