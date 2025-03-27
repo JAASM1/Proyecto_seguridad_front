@@ -1,9 +1,11 @@
 <template>
-  <div class="container">
+  <div class="container bg-white">
     <h2>Recuperar Contraseña</h2>
     <input v-model="email" type="email" placeholder="Correo electrónico" required />
     <button :disabled="loading" @click="handleForgotPassword">Enviar</button>
-    <p v-if="message">{{ message }}</p>
+    <p v-if="message">{{ message }} 
+      <a href="/ResetPassword">Actualizar contraseña</a>
+    </p>
   </div>
 </template>
 
