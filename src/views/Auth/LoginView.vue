@@ -47,8 +47,8 @@
       </Form>
 
       <p class="text-gray-400 text-center mt-4">
-        <RouterLink to="/RecoverPassword" class="text-teal-400 hover:underline"
-          >¿Olvidaste tu contraseña?</RouterLink
+        <a href="/ForgotPassword" class="text-teal-400 hover:underline"
+          >¿Olvidaste tu contraseña?</a
         >
       </p>
       <p class="text-gray-400 text-center mt-2">
