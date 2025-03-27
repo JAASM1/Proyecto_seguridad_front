@@ -1,12 +1,18 @@
 import { LogService } from "@/services/LogService/logService";
-import { getEventsByUser, postEvent, getEventById, putEvent, deleteEvent, CreateInvitation } from "@/services/Event/eventService";
+import {
+  getEventsByUser,
+  postEvent,
+  getEventById,
+  putEvent,
+  deleteEvent,
+  CreateInvitation,
+  getEventByInvitation,
+} from "@/services/Event/eventService";
 import type { Event, EventForm } from "@/interfaces/Event/event";
 
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 import { useUserStore } from "../auth/user";
-
-
 
 export const useEventStore = defineStore("event", () => {
   const auth = useUserStore();
@@ -16,7 +22,7 @@ export const useEventStore = defineStore("event", () => {
     error: null as string | null,
   });
 
-  const idUser = auth.getUserIdFromToken();  
+  const idUser = auth.getUserIdFromToken();
 
   const actions = {
     async getAllEvents() {
@@ -31,6 +37,18 @@ export const useEventStore = defineStore("event", () => {
         await LogService.log("error", "Error fetching events", error);
       } finally {
         state.loading = false;
+      }
+    },
+
+    async GetEventByInvitation() {
+      state.loading = true;
+      try {
+        const response = await getEventByInvitation(idUser);
+        state.events = response?.data || [];
+        return response;
+      } catch (error: any) {
+        state.error = error.message;
+        await LogService.log("error", "Error fetching event", error);
       }
     },
 
@@ -72,7 +90,7 @@ export const useEventStore = defineStore("event", () => {
       }
     },
 
-    async updateEvent(id: number, event:Omit<Event, "id">) {
+    async updateEvent(id: number, event: Omit<Event, "id">) {
       state.loading = true;
       try {
         const data = {
@@ -81,7 +99,7 @@ export const useEventStore = defineStore("event", () => {
         };
         const response = await putEvent(id, data);
         if (response && response.status === 200) {
-          const index = state.events.findIndex(e => e.id === id);
+          const index = state.events.findIndex((e) => e.id === id);
           if (index !== -1) {
             state.events[index] = { ...state.events[index], ...event };
           }
@@ -96,7 +114,6 @@ export const useEventStore = defineStore("event", () => {
       } finally {
         state.loading = false;
       }
-      
     },
 
     async destroyEvent(id: number) {
@@ -104,13 +121,12 @@ export const useEventStore = defineStore("event", () => {
       try {
         const response = await deleteEvent(id);
         if (response && response.status === 200) {
-
           // Hacer esto es incorrecto. Joshua Romero.
           // Es mala practica jugar con el arreglo. Es mejor recargar el arreglo principal
           // llamando al GetEventsAll y recargando al estado global de la aplicacion porque
           // si ocurre un error habras eliminado para el usuario este y tambien le habras quitado
           // al arreglo y aun asi cuando recargue se verá.
-          const index = state.events.findIndex(e => e.id === id);
+          const index = state.events.findIndex((e) => e.id === id);
           if (index !== -1) {
             state.events.splice(index, 1);
           }
@@ -125,21 +141,21 @@ export const useEventStore = defineStore("event", () => {
       } finally {
         state.loading = false;
       }
-    }, 
+    },
 
-    async CreateInvitationStore(idEvent: number, idUser: number){
+    async CreateInvitationStore(idEvent: number, idUser: number) {
       try {
-        state.loading = true
+        state.loading = true;
         const response = await CreateInvitation(idEvent, idUser);
         return response;
-      } catch(error: unknown ) {
+      } catch (error: unknown) {
         if (error instanceof Error) {
           console.log("Error estándar:", error.message);
         } else {
           console.log("Error no estándar:", error);
         }
       }
-    }
+    },
   };
 
   return { state, actions };

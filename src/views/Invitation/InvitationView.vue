@@ -18,7 +18,7 @@
     </div>
     <div class="flex justify-between mt-4">
       <button
-        @click="abrirModalRegistro"
+        @click="register"
         class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg w-1/2 mr-2"
       >
         Aceptar
@@ -31,15 +31,85 @@
       </button>
     </div>
   </div>
+
+  <!-- Modal de Login -->
+  <div
+    v-if="modalAbierto && isLogin"
+    class="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-xs"
+  >
+    <div class="w-full max-w-md p-8 bg-cpnDark rounded-lg shadow-lg">
+      <h2 class="text-2xl font-bold text-white mb-2">Inicia sesión</h2>
+      <p class="text-gray-400 mb-6">Por favor ingresa tus credenciales</p>
+      <Form @submit="submitLogin">
+        <div class="mb-4">
+          <label class="block text-gray-400 mb-1">Correo</label>
+          <div
+            class="flex items-center bg-gray-800 text-gray-300 rounded-lg px-3 py-2"
+          >
+            <i class="fas fa-envelope"></i>
+            <Field
+              v-model="email"
+              type="email"
+              id="email"
+              name="email"
+              class="bg-transparent focus:outline-none ml-2 w-full"
+              placeholder="Correo"
+              required
+            />
+          </div>
+          <ErrorMessage name="email" class="text-red-500 text-sm" />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-400 mb-1">Contraseña</label>
+          <div
+            class="flex items-center bg-gray-800 text-gray-300 rounded-lg px-3 py-2"
+          >
+            <i class="fas fa-lock"></i>
+            <Field
+              v-model="password"
+              type="password"
+              id="password"
+              name="password"
+              class="bg-transparent focus:outline-none ml-2 w-full"
+              placeholder="Contraseña"
+              required
+            />
+          </div>
+          <ErrorMessage name="password" class="text-red-500 text-sm" />
+        </div>
+        <div class="flex justify-between mt-4">
+          <button
+            type="submit"
+            class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg w-1/2 mr-2"
+          >
+            Iniciar sesión
+          </button>
+          <button
+            @click="cerrarModal"
+            class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg w-1/2"
+          >
+            Cancelar
+          </button>
+        </div>
+      </Form>
+      <p class="text-gray-400 mt-4 text-center">
+        ¿No tienes cuenta?
+        <button @click="isLogin = false" class="text-teal-500 hover:underline">
+          Regístrate aquí
+        </button>
+      </p>
+    </div>
+  </div>
+
   <!-- Modal de Registro -->
   <div
-    v-if="modalAbierto"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    v-if="modalAbierto && !isLogin"
+    class="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-xs"
   >
     <div class="w-full max-w-md p-8 bg-cpnDark rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold text-white mb-2">Crea tu cuenta</h2>
       <p class="text-gray-400 mb-6">Por favor llena los siguientes campos</p>
-      <Form @submit="register" :validation-schema="RegisterValidation">
+      <Form @submit="submitRegister" :validation-schema="RegisterValidation">
         <div class="mb-4">
           <label class="block text-gray-400 mb-1">Nombre completo</label>
           <div
@@ -127,6 +197,12 @@
           </button>
         </div>
       </Form>
+      <p class="text-gray-400 mt-4 text-center">
+        ¿Ya tienes cuenta?
+        <button @click="isLogin = true" class="text-teal-500 hover:underline">
+          Inicia sesión aquí
+        </button>
+      </p>
     </div>
   </div>
   <!-- Alerta Notificación -->
@@ -164,6 +240,7 @@ const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const router = useRouter();
+const isLogin = ref(true);
 
 const event = ref<Event>({} as Event);
 
@@ -193,66 +270,109 @@ const cerrarModal = () => {
 interface ResponseHelper {
   message: string;
   user: {
-    id: number,
-    name: string,
-    email: string,
-  }
+    id: number;
+    name: string;
+    email: string;
+  };
 }
 
 const register = async () => {
+  try {
+    if (!isAuthenticated()) {
+      abrirModalRegistro();
+      return;
+    }
+
+    const idUser = userStore.getUserIdFromToken();
+    const result = await eventStore.actions.CreateInvitationStore(
+      event.value.id,
+      idUser
+    );
+
+    if (result?.status === 200) {
+      Swal.fire({
+        title: "Invitación Aceptada Correctamente",
+        text: "Tu cuenta se ha enlazado con la invitación",
+        icon: "success",
+        showConfirmButton: false,
+        showCancelButton: false,
+        timerProgressBar: true,
+        timer: 2000,
+      });
+      router.push("/");
+    } else {
+      Swal.fire({
+        title: "Invitación No Aceptada Correctamente",
+        text: "Tu cuenta no se ha enlazado con la invitación",
+        icon: "error",
+        showConfirmButton: false,
+        showCancelButton: false,
+        timerProgressBar: true,
+        timer: 2000,
+      });
+    }
+  } catch (error) {
+    console.error("Error en el registro:", error);
+    Swal.fire({
+      title: "Error en el registro",
+      text: "Hubo un problema, intenta nuevamente",
+      icon: "error",
+      confirmButtonColor: "#e53e3e",
+    });
+  }
+};
+
+interface LoginForm {
+  email: string;
+  password: string;
+}
+const submitLogin = async (values: LoginForm) => {
+  try {
+    await userStore.LoginStore(values);
+    Swal.fire({
+      title: "¡Inicio de sesión exitoso!",
+      text: "Has iniciado sesión correctamente",
+      icon: "success",
+      confirmButtonColor: "#38b2ac",
+    });
+    const idUser = userStore.getUserIdFromToken();
+    await eventStore.actions.CreateInvitationStore(event.value.id, idUser);
+
+    router.push("/");
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
+    Swal.fire({
+      title: "Error al iniciar sesión",
+      text: "Credenciales incorrectas, intenta nuevamente",
+      icon: "error",
+      confirmButtonColor: "#e53e3e",
+    });
+  }
+};
+
+const submitRegister = async () => {
   try {
     let register: Iuser = {
       id: 0,
       name: name.value,
       email: email.value,
-      password: password.value
-    }
-    const response = await userStore.RegisterStore(register);
-    const castResponse = response.data as ResponseHelper
+      password: password.value,
+    };
 
-    if(response.data != null && !isAuthenticated()){
-      Swal.fire({
+    const response = await userStore.RegisterStore(register);
+    const castResponse = response.data as ResponseHelper;
+    Swal.fire({
       title: "¡Registro exitoso!",
       text: "Tu cuenta ha sido creada correctamente",
       icon: "success",
       confirmButtonColor: "#38b2ac",
     });
 
-    Swal.fire({
-          title: 'Invitación Aceptada Correctamente',
-          text: 'Tu cuenta se ha enlazado con la invitación',
-          icon: "success",
-          showConfirmButton: false,
-          showCancelButton: false,
-          timerProgressBar: true,
-          timer: 2000
-        });
+    await eventStore.actions.CreateInvitationStore(
+      event.value.id,
+      castResponse.user.id
+    );
 
-      const result = await eventStore.actions.CreateInvitationStore(event.value.id, castResponse.user.id);
-    } else {
-      const result = await eventStore.actions.CreateInvitationStore(event.value.id, userStore.auth.user.id);
-
-      if(result?.status === 200)
-        Swal.fire({
-          title: 'Invitación Aceptada Correctamente',
-          text: 'Tu cuenta se ha enlazado con la invitación',
-          icon: "success",
-          showConfirmButton: false,
-          showCancelButton: false,
-          timerProgressBar: true,
-          timer: 2000
-        });
-      else
-      Swal.fire({
-          title: 'Invitación No Aceptada Correctamente',
-          text: 'Tu cuenta no se ha enlazado con la invitación',
-          icon: "error",
-          showConfirmButton: false,
-          showCancelButton: false,
-          timerProgressBar: true,
-          timer: 2000
-        });
-    }
     router.push("/login");
   } catch (error) {
     console.error("Error en el registro:", error);
