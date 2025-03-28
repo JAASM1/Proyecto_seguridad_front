@@ -24,20 +24,11 @@ const router = createRouter({
       },
     },
     {
-      path: "/detalles-evento/:id",
-      name: "detalles-evento",
-      component: DetailsEventView,
-      meta: {
-        layout: "AppLayout",
-        requiresAuth: true,
-      },
-    },
-    {
       path: "/invitacion/:token",
       name: "invitacion",
       component: Invitation,
       meta: {
-        layout: "AuthLayout",
+        layout: "InvitationLayout",
       },
     },
     {

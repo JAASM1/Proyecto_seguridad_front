@@ -7,6 +7,7 @@ import {
   deleteEvent,
   CreateInvitation,
   getEventByInvitation,
+  getInvitedUsersByEvent
 } from "@/services/Event/eventService";
 import type { Event, EventForm } from "@/interfaces/Event/event";
 
@@ -56,6 +57,19 @@ export const useEventStore = defineStore("event", () => {
       state.loading = true;
       try {
         const response = await getEventById(id);
+        return response;
+      } catch (error: any) {
+        state.error = error.message;
+        await LogService.log("error", "Error fetching event", error);
+      } finally {
+        state.loading = false;
+      }
+    },
+
+    async GetInvitedUsersByEvent(id: number) {
+      state.loading = true;
+      try {
+        const response = await getInvitedUsersByEvent (id);
         return response;
       } catch (error: any) {
         state.error = error.message;

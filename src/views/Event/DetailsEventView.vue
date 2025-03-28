@@ -1,6 +1,6 @@
 <template>
   <div
-    class="text-white space-y-5 font-poppins flex flex-col items-center pb-5 mt-10"
+    class="text-white space-y-5 font-poppins flex flex-col items-center pb-5"
   >
     <div class="space-y-3 w-full max-w-lg">
       <h2 class="text-2xl font-bold">{{ event?.name }}</h2>
@@ -16,12 +16,15 @@
       />
       <DetailsEvent v-if="event" title="Ubicación" :body="event.location" />
 
-      <div class="bg-cpnDark rounded-lg p-3 flex flex-col gap-2 w-full" v-if="event?.idOrganizer == idUser">
+      <div
+        class="bg-cpnDark shadow shadow-Dark rounded-lg p-3 flex flex-col gap-2 w-full"
+        v-if="event?.idOrganizer == idUser"
+      >
         <p class="text-sm">Copia e invita por medio de este enlace</p>
         <span
-          class="bg-white border-2 rounded-full border-white flex w-1/2"
+          class="bg-white border rounded-full border-white flex w-1/2"
         ></span>
-        <div class="bg-Dark p-1.5 rounded-lg flex justify-between items-center">
+        <div class="bg-Dark p-1.5 text-sm rounded-lg flex justify-between items-center">
           <p class="text-white font-light line-clamp-1">
             {{ url + `${event?.token}` }}
           </p>
@@ -106,22 +109,30 @@
       :style="{ width: '500px' }"
       :breakpoints="{ '960px': '75vw', '641px': '90vw' }"
       class="rounded-lg overflow-hidden [&_.p-dialog-content]:bg-cpnDark [&_.p-dialog-header]:bg-cpnDark [&_.p-dialog-title]:text-white [&_.p-dialog-header-icon]:text-white"
-      >
-      <Form
-        v-if="event"
-        :event="event"
-        @submit="submitEditForm"
-      />
+    >
+      <Form v-if="event" :event="event" @submit="submitEditForm" />
     </Dialog>
 
-    <!-- Modal de invitados -->
-  <ModalEvent
-    :visible="showGuestListModal"
-    :guests="guests"
-    :eventId="eventId"
-    @update:visible="showGuestListModal = $event"
-    @guest-updated="fetchGuests"
-  />
+    <Dialog
+      v-model:visible="showGuestListModal"
+      modal
+      header="Lista de invitados"
+      :style="{ width: '500px' }"
+      :breakpoints="{ '960px': '75vw', '641px': '90vw' }"
+      class="rounded-lg overflow-hidden [&_.p-dialog-content]:bg-cpnDark [&_.p-dialog-header]:bg-cpnDark [&_.p-dialog-title]:text-white [&_.p-dialog-header-icon]:text-white"
+    >
+      <p v-if="invited.length <= 0" class="text-center">Sin invitados</p>
+      <div
+        v-for="user in invited"
+        :key="user.id"
+        class="flex items-center gap-2"
+      >
+        <div class="border-b w-full py-0.5">
+          <p class="text-white capitalize">{{ user.name }}</p>
+          <p class="text-sm text-gray-400 font-light mb-1">{{ user.email }}</p>
+        </div>
+      </div>
+    </Dialog>
   </div>
 </template>
 
@@ -135,7 +146,6 @@ import {
 } from "@heroicons/vue/24/outline";
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
-import axios from "axios";
 import { useToast } from "primevue/usetoast";
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
@@ -143,51 +153,45 @@ import { useEventStore } from "@/stores/Event/event";
 import DetailsEvent from "@/components/Event/DetailsEvent.vue";
 import type { Event } from "@/interfaces/Event/event";
 import { formatDate } from "@/utils/dateUtils";
-import ModalEvent from "@/components/Event/ModalEvent.vue";
 import { useUserStore } from "@/stores/auth/user";
 import Form from "@/components/Event/Form.vue";
+import type { Iuser } from "@/interfaces/user/user";
+import { defineProps } from "vue";
 
 const router = useRouter();
-//Esta linea te extrae el id del evento - Alex
-const eventId = Number(router.currentRoute.value.params.id);
-const editEvent = () => router.push(`/editar-evento/${eventId}`);
+const editEvent = () => router.push(`/editar-evento/${props.eventId}`);
 const eventStore = useEventStore();
 const userStore = useUserStore();
 const showEditModal = ref(false);
 const event = ref<Event & { token?: string; idOrganizer: any }>();
+const invited = ref<Iuser[]>([]);
 const idUser = userStore.getUserIdFromToken();
 
 const url = import.meta.env.VITE_INVITATION_URL;
 
-const emit = defineEmits(["submit"]);
+const emit = defineEmits(["submit", "eventUpdated", "eventDeleted"]);
 const toast = useToast();
 const showGuestListModal = ref(false);
-const currentEventId = ref<number | null>(null);
 const visible = ref(false);
 
-// Estructura para invitados
-interface Guest {
-  id: number;
-  name: string;
-  email: string;
-  status: RegistrationStatus;
-  idInvitation?: number;
-}
-enum RegistrationStatus {
-  Pending = "Pending",
-  Accepted = "Accepted",
-  Cancelled = "Cancelled",
-}
+const props = defineProps<{ eventId: number }>();
 
 //Informacion de evento - Alex
 const fetchEvent = async () => {
   try {
-    const eventFound = await eventStore.actions.getEvent(eventId);
+    const eventFound = await eventStore.actions.getEvent(props.eventId);
     if (!eventFound) {
       router.push("/");
       return;
     }
     event.value = eventFound.data;
+    const listInvited = await eventStore.actions.GetInvitedUsersByEvent(
+      props.eventId
+    );
+    if (listInvited!.status === 200) {
+      invited.value = listInvited!.data;
+      console.log("Lista de invitados:", invited.value);
+    }
   } catch (error) {
     console.error("Error fetching event:", error);
   }
@@ -200,10 +204,14 @@ const openEditModal = () => {
 const submitEditForm = async (updatedEvent: Event) => {
   try {
     if (event.value) {
-      const response = await eventStore.actions.updateEvent(event.value.id, updatedEvent);
+      const response = await eventStore.actions.updateEvent(
+        event.value.id,
+        updatedEvent
+      );
       if (response.status === 200) {
         showEditModal.value = false;
         await fetchEvent(); // Actualiza los datos del evento en la vista
+        emit("eventUpdated", updatedEvent);
       }
     }
   } catch (error) {
@@ -233,36 +241,10 @@ const copyToClipboard = async () => {
   }
 };
 
-const guests = ref<Guest[]>([]);
-
-// Obtener invitados
-const fetchGuests = async () => {
-  try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/Event/GetEventGuests/${eventId}`
-    );
-    guests.value = response.data.map((guest: any) => ({
-  id: guest.Id,
-  name: guest.Name,
-  email: guest.Email,
-  status: guest.Status as RegistrationStatus,
-  idInvitation: guest.InvitationId
-}));
-  } catch (error) {
-    console.error('Error fetching guests:', error);
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'No se pudieron cargar los invitados',
-      life: 3000
-    });
-  }
-};
-
 // Eliminar evento - Creado por Alex ¡No tocar!
 const deleteEvent = async () => {
   try {
-    const response = await eventStore.actions.destroyEvent(eventId);
+    const response = await eventStore.actions.destroyEvent(props.eventId);
     if (response.status === 200) {
       toast.add({
         severity: "success",
@@ -270,7 +252,9 @@ const deleteEvent = async () => {
         detail: "El evento ha sido eliminado",
         life: 3000,
       });
-      router.push("/");
+      visible.value = false;
+      emit("eventDeleted");
+      await fetchEvent();
     }
   } catch (error) {
     console.log(error);
@@ -285,9 +269,5 @@ const deleteEvent = async () => {
 
 onMounted(() => {
   fetchEvent();
-  if (currentEventId.value) {
-    fetchGuests();
-  }
 });
-
 </script>

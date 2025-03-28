@@ -1,34 +1,42 @@
 <template>
   <div
-    class="text-white space-y-5 font-poppins flex-col pb-5 min-h-screen flex items-center justify-center"
+    class="text-white space-y-5 font-poppins flex-col pb-5 w-full min-h-screen flex items-center justify-center"
   >
-    <div class="space-y-3 w-full max-w-lg">
-      <h2 class="text-2xl font-bold">{{ event?.name }}</h2>
-      <DetailsEvent
-        v-if="event"
-        title="Descripción"
-        :body="event.description"
-      />
-      <DetailsEvent
-        v-if="event"
-        title="Fecha y hora"
-        :body="formatDate(event.eventDateTime)"
-      />
-      <DetailsEvent v-if="event" title="Ubicación" :body="event.location" />
-    </div>
-    <div class="flex justify-between mt-4">
-      <button
-        @click="register"
-        class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg w-1/2 mr-2"
-      >
-        Aceptar
-      </button>
-      <button
-        @click="rechazarInvitacion"
-        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg w-1/2"
-      >
-        Rechazar
-      </button>
+  <div class="text-center space-y-2">
+    <h1 class="text-5xl font-bold">¡Felicidades!</h1>
+    <p class="text-xl font-semibold">Estas invidato a la fiesta</p>
+    <p>Acepta la invitacion para poder asistir</p>
+  </div>
+
+    <div class="w-1/3 space-y-5 border p-8 rounded-lg">
+      <div class="space-y-3 w-full rounded-lg">
+        <h2 class="text-2xl font-bold">{{ event?.name }}</h2>
+        <DetailsEvent
+          v-if="event"
+          title="Descripción"
+          :body="event.description"
+        />
+        <DetailsEvent
+          v-if="event"
+          title="Fecha y hora"
+          :body="formatDate(event.eventDateTime)"
+        />
+        <DetailsEvent v-if="event" title="Ubicación" :body="event.location" />
+      </div>
+      <div class="flex w-full justify-between gap-5">
+        <button
+          @click="register"
+          class="bg-teal-500 w-full hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg"
+        >
+          Aceptar
+        </button>
+        <button
+          @click="rechazarInvitacion"
+          class="bg-gray-500 w-full hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
+        >
+          Rechazar
+        </button>
+      </div>
     </div>
   </div>
 

@@ -13,29 +13,29 @@
             id="name"
             v-bind="field"
             variant="filled"
-            class="w-full bg-inputColor"
+            class="w-full bg-inputColor text-Dark dark:text-white"
             :class="{ 'p-filled': formValues.name }"
           />
         </Field>
-        <label for="name">Nombre del evento</label>
+        <label for="name" class="text-Dark dark:text-white">Nombre del evento</label>
       </FloatLabel>
       <ErrorMessage name="name" class="text-danger text-sm" />
     </div>
 
     <div>
       <FloatLabel variant="in">
-        <Field name="description" v-slot="{ field }"> 
+        <Field name="description" v-slot="{ field }">
           <Textarea
             id="description"
             rows="5"
             cols="30"
             style="resize: none"
             v-bind="field"
-            class="bg-inputColor w-full"
+            class="bg-inputColor w-full text-Dark dark:text-white"
             :class="{ 'p-filled': formValues.description }"
           />
         </Field>
-        <label for="description">Descripción</label>
+        <label for="description" class="text-Dark dark:text-white">Descripción</label>
       </FloatLabel>
       <ErrorMessage name="description" class="text-danger text-sm" />
     </div>
@@ -52,11 +52,11 @@
               fluid
               v-model="formValues.eventDateTime"
               v-bind="field"
-              class="custom-datepicker"
+              class="custom-datepicker text-Dark dark:text-white"
               :class="{ 'p-filled': formValues.eventDateTime }"
             />
           </Field>
-          <label for="eventDateTime">Fecha y hora</label>
+          <label for="eventDateTime" class="text-Dark dark:text-white">Fecha y hora</label>
         </FloatLabel>
         <ErrorMessage name="date" class="text-danger text-sm" />
       </div>
@@ -69,11 +69,11 @@
             id="location"
             v-bind="field"
             variant="filled"
-            class="w-full bg-inputColor"
+            class="w-full bg-inputColor text-Dark dark:text-white bg-bgWhite"
             :class="{ 'p-filled': formValues.location }"
           />
         </Field>
-        <label for="location">Ubicación</label>
+        <label for="location" class="text-Dark dark:text-white">Ubicación</label>
       </FloatLabel>
       <ErrorMessage name="location" class="text-danger text-sm" />
     </div>
