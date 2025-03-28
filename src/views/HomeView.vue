@@ -59,7 +59,7 @@
       :breakpoints="{ '960px': '75vw', '641px': '90vw' }"
       class="rounded-lg overflow-hidden [&_.p-dialog-content]:bg-cpnDark [&_.p-dialog-header]:bg-cpnDark [&_.p-dialog-title]:text-white [&_.p-dialog-header-icon]:text-white"
     >
-      <DetailsEventView :eventId="selectedEvent || 0" @eventUpdated="updateEventInList" />
+      <DetailsEventView :eventId="selectedEvent || 0" @eventUpdated="updateEventInList" @eventDeleted="closeDetailsModal"/>
     </Dialog>
   </main>
 </template>
@@ -94,6 +94,12 @@ const openCreateModal = () => {
 const openDetailsModal = (eventId: number) => {
   selectedEvent.value = eventId;
   isDetailsVisible.value = true;
+};
+
+const closeDetailsModal = async () => {
+  isDetailsVisible.value = false;
+  selectedEvent.value = null;
+  await fetchEvents();
 };
 
 const closeModal = () => {

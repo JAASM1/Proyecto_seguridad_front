@@ -169,7 +169,7 @@ const idUser = userStore.getUserIdFromToken();
 
 const url = import.meta.env.VITE_INVITATION_URL;
 
-const emit = defineEmits(["submit", "eventUpdated"]);
+const emit = defineEmits(["submit", "eventUpdated", "eventDeleted"]);
 const toast = useToast();
 const showGuestListModal = ref(false);
 const visible = ref(false);
@@ -252,7 +252,9 @@ const deleteEvent = async () => {
         detail: "El evento ha sido eliminado",
         life: 3000,
       });
-      router.push("/");
+      visible.value = false;
+      emit("eventDeleted");
+      await fetchEvent();
     }
   } catch (error) {
     console.log(error);

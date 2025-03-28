@@ -28,7 +28,7 @@ const router = createRouter({
       name: "invitacion",
       component: Invitation,
       meta: {
-        layout: "AuthLayout",
+        layout: "InvitationLayout",
       },
     },
     {

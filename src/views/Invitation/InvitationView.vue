@@ -1,6 +1,6 @@
 <template>
   <div
-    class="text-white space-y-5 font-poppins flex-col pb-5 min-h-screen flex items-center justify-center"
+    class="text-white space-y-5 font-poppins flex-col pb-5 w-full min-h-screen flex items-center justify-center"
   >
   <div class="text-center space-y-2">
     <h1 class="text-5xl font-bold">¡Felicidades!</h1>
